@@ -4,6 +4,18 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+// Version de l'application = tag « vX.Y.Z » de CE dépôt (mobile), jamais celle du PC.
+// La CI la passe avec -PappVersion=X.Y.Z ; en local, c'est le dernier tag de la branche.
+val appVersion: String = (findProperty("appVersion") as String?)
+    ?: runCatching {
+        providers.exec { commandLine("git", "describe", "--tags", "--abbrev=0", "--match", "v[0-9]*") }
+            .standardOutput.asText.get().trim().removePrefix("v")
+    }.getOrNull()?.takeIf { it.isNotEmpty() }
+    ?: "0.0.0"
+require(Regex("""\d+\.\d+\.\d+""").matches(appVersion)) { "Version invalide : « $appVersion » (attendu X.Y.Z)" }
+// X.Y.Z → X×10000 + Y×100 + Z (Y et Z < 100) ; toujours croissant d'une version à la suivante.
+val appVersionCode = appVersion.split('.').map(String::toInt).let { (x, y, z) -> maxOf(1, x * 10000 + y * 100 + z) }
+
 android {
     namespace = "fr.toupiearena.mobile"
     compileSdk = 35
@@ -13,15 +25,25 @@ android {
         applicationId = "fr.toupiearena.mobile"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2
-        versionName = "2.0.0"
+        versionCode = appVersionCode
+        versionName = appVersion
     }
 
+    // Clé de publication fournie par la CI (secrets GitHub) ; sans elle, l'APK de publication
+    // est signé avec la clé de débogage (essais locaux).
+    val releaseKeystore = System.getenv("RELEASE_KEYSTORE")?.let(::file)?.takeIf { it.exists() }
+    signingConfigs {
+        if (releaseKeystore != null) create("release") {
+            storeFile = releaseKeystore
+            storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("RELEASE_KEY_ALIAS")
+            keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
-            // Pas de clé de publication : l'APK de test est signé avec la clé de débogage.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
         }
     }
     compileOptions {

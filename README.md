@@ -95,6 +95,27 @@ que si `TOUPIE_PC_INTEROP` désigne le petit programme d'essai côté PC (constr
 TOUPIE_PC_INTEROP=/chemin/vers/interop ./gradlew testDebugUnitTest
 ```
 
+### Intégration continue et versions
+
+`.github/workflows/android.yml` lance, à chaque push et pull request, les tests JVM, le lint Android
+et la construction de l'APK de débogage (rapports et APK en artefacts).
+
+La version de l'application vient **des tags de ce dépôt** (`vX.Y.Z`), pas de la version PC :
+`versionName` = `X.Y.Z`, `versionCode` = `X×10000 + Y×100 + Z`. En local, c'est le dernier tag de la
+branche (`0.0.0` s'il n'y en a pas) ; on peut forcer avec `-PappVersion=X.Y.Z`.
+
+Pour publier : notez la version dans `CHANGELOG.md` (section `## X.Y.Z`), puis
+
+```sh
+git tag vX.Y.Z && git push origin vX.Y.Z
+```
+
+La CI construit l'APK de publication, vérifie sa version et sa signature, puis crée la release
+GitHub avec `TopArena-X.Y.Z.apk` et les notes du changelog. La clé de signature vient des secrets du
+dépôt : `RELEASE_KEYSTORE_BASE64` (le fichier `.jks` en base64), `RELEASE_KEYSTORE_PASSWORD`,
+`RELEASE_KEY_ALIAS` et `RELEASE_KEY_PASSWORD`. **Gardez une copie de la clé** : sans elle, les
+téléphones ne pourront plus installer les mises à jour par-dessus la version publiée.
+
 ### Architecture
 
 ```
