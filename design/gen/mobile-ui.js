@@ -159,8 +159,8 @@ function topRow(d, x, y, w, p, o = {}) {
 }
 
 // Barres de stats compactes (attaque, défense, endurance).
-function statRow(d, x, y, w, n, v, col, max = 15) {
-  const segs = max, gap = 2, sw = (w - (segs - 1) * gap) / segs, out = [label(x, y, n), D(x + w, y + 1, String(v), { size: 12, fill: col, anchor: 'end' })];
+function statRow(d, x, y, w, n, v, col, max = 15, txt) {
+  const segs = max, gap = 2, sw = (w - (segs - 1) * gap) / segs, out = [label(x, y, n), D(x + w, y + 1, txt ?? String(v), { size: 12, fill: col, anchor: 'end' })];
   for (let i = 0; i < segs; i++) out.push(path(skew(x + i * (sw + gap), y + 6, sw + 2, 6, 2), { fill: i < v ? col : C.line, opacity: i < v ? 1 : 0.5 }));
   return g(`Stat ${n}`, out);
 }
@@ -182,9 +182,9 @@ function chip(d, x, y, t, col = C.cyan, ic) {
 function stadiumChip(d, x, y, w, key, o = {}) {
   const s = STAD[key], h = o.h || 58, out = [card(d, x, y, w, h, { selected: o.selected })];
   out.push(Ar.stadium(d, key, x + h / 2 + 2, y + h / 2, h * 0.36));
-  out.push(D(x + h + 6, y + h / 2 - 2, s.name.toUpperCase(), { size: 12, ls: 1.4 }));
-  out.push(T(x + h + 6, y + h / 2 + 13, s.code, { size: 10, fill: s.color, weight: 700, ls: 1 }));
-  if (o.selected) out.push(L.icon('check', x + w - 14, y + 12, 12, C.green));
+  out.push(D(x + h + 4, y + h / 2 - 2, s.name.toUpperCase(), { size: 11.5, ls: 1 }));
+  out.push(T(x + h + 4, y + h / 2 + 13, s.code, { size: 9.5, fill: s.color, weight: 700, ls: 0.6 }));
+  if (o.selected) out.push(L.icon('check', x + w - 10, y + 10, 10, C.green));
   return g(`Stadium ${s.name}`, out);
 }
 
