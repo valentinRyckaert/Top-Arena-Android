@@ -27,6 +27,11 @@ class MainActivity : ComponentActivity() {
         setContent { ToupieApp(app) }
     }
 
+    override fun onStop() {
+        app.onBackground() // Android peut tuer l'application en arrière-plan : tournoi solo sauvegardé.
+        super.onStop()
+    }
+
     override fun onDestroy() {
         if (isFinishing) app.leaveLobby(goToMenu = false)
         super.onDestroy()

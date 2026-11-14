@@ -13,6 +13,9 @@ import fr.toupiearena.mobile.game.Difficulty
 import fr.toupiearena.mobile.game.MatchRules
 import fr.toupiearena.mobile.game.MatchSeries
 import fr.toupiearena.mobile.game.Participant
+import fr.toupiearena.mobile.game.SavedTournament
+import fr.toupiearena.mobile.ui.holo.I18n
+import fr.toupiearena.mobile.ui.holo.tr
 import fr.toupiearena.mobile.game.Stadium
 import fr.toupiearena.mobile.game.Tournament
 import fr.toupiearena.mobile.game.TournamentSettings
@@ -41,6 +44,8 @@ sealed class Screen {
     data object Builder : Screen()
     data object Settings : Screen()
     data object Help : Screen()
+    /** Page des coups spéciaux ; [back] : écran où revenir (atelier, aide). */
+    data class Moves(val back: Screen) : Screen()
     data object TournamentSetup : Screen()
     data object TournamentHub : Screen()
     data class LanMenu(val tournament: TournamentSettings?) : Screen()
@@ -59,6 +64,16 @@ class AppController(private val context: Context, val scope: CoroutineScope) {
     val prefs = Prefs(context)
     val repository = TopRepository(File(context.filesDir, "tops.json"))
     val repositoryLoaded = repository.load()
+    private val savedSlot = SavedTournament(File(context.filesDir, "solo-tournament.json"))
+    /** Tournoi solo sauvegardé (un seul emplacement, comme sur PC). */
+    var saved by mutableStateOf(if (savedSlot.exists) savedSlot.load() else null)
+        private set
+
+    init {
+        I18n.load(context)
+        I18n.language = prefs.language
+        MatchRules.defaultDuelMode = prefs.duelMode
+    }
 
     var screen by mutableStateOf<Screen>(Screen.Menu)
     /** Incrémenté à chaque changement réseau ou de tournoi (recomposition). */
@@ -81,11 +96,9 @@ class AppController(private val context: Context, val scope: CoroutineScope) {
 
     // --- Solo -------------------------------------------------------------------
 
-    fun startSolo(player: Top, opponent: Top, difficulty: Difficulty, stadium: Stadium, rules: MatchRules) {
-        val start = {
-            open(LocalSession(listOf(player, opponent), listOf("Vous", "Bot ${difficulty.label}"), stadium, difficulty, rules),
-                Screen.Mode.Solo)
-        }
+    /** Solo contre 1 à 3 bots. */
+    fun startSolo(player: Top, bots: List<Top>, difficulty: Difficulty, stadium: Stadium, rules: MatchRules) {
+        val start = { open(LocalSession(player, bots, stadium, difficulty, rules), Screen.Mode.Solo) }
         lastSolo = start
         start()
     }
@@ -115,6 +128,7 @@ class AppController(private val context: Context, val scope: CoroutineScope) {
 
     fun startSoloTournament(settings: TournamentSettings, tops: List<Top>) {
         closeTournament()
+        clearSaved()
         val humans = listOf(Participant("Vous", LobbyServer.HOST_ID, Difficulty.Normal, tops))
         val t = Tournament.create(settings, Tournament.addBots(humans, settings, repository.allTops, Random.nextLong()), Random.nextLong())
         attachTournament(TournamentDirector(null, t, Random.nextLong(), scope, main))
@@ -130,6 +144,40 @@ class AppController(private val context: Context, val scope: CoroutineScope) {
         }
         screen = Screen.TournamentHub
     }
+
+    /** « Tour 2/3 » ou « journée 4/7 » du tournoi sauvegardé, null s'il n'y en a pas. */
+    fun savedTournamentLabel(): String? = saved?.let { t -> roundLabel(t) }
+
+    fun resumeSoloTournament() {
+        val t = saved ?: return
+        clearSaved() // Le tournoi repris est en cours : la sauvegarde sera refaite en le quittant.
+        closeTournament()
+        attachTournament(TournamentDirector(null, t, Random.nextLong(), scope, main))
+    }
+
+    private val soloTournament get() = tournament?.takeIf { server == null && client == null }?.tournament
+
+    /** Quitte le tournoi solo ; [save] : le garder pour le reprendre plus tard. */
+    fun quitSoloTournament(save: Boolean) {
+        val t = soloTournament
+        if (t != null && !t.isFinished && save) {
+            if (!savedSlot.save(t)) { message = tr("Impossible d'écrire la sauvegarde du tournoi."); return }
+            saved = t
+        } else if (!save) clearSaved()
+        currentBattle()?.session?.close()
+        closeTournament()
+        screen = Screen.Menu
+    }
+
+    /** L'application passe en arrière-plan (et peut être tuée) : le tournoi solo en cours est sauvegardé. */
+    fun onBackground() {
+        val t = soloTournament ?: return
+        if (!t.isFinished && savedSlot.save(t)) saved = t
+    }
+
+    private fun clearSaved() { savedSlot.clear(); saved = null }
+
+    val isSoloTournament get() = soloTournament != null
 
     fun closeTournament() {
         tournament?.close()
@@ -278,6 +326,7 @@ fun ToupieApp(app: AppController) {
             Screen.Builder -> BuilderScreen(app)
             Screen.Settings -> SettingsScreen(app)
             Screen.Help -> HelpScreen(app)
+            is Screen.Moves -> MovesScreen(app, screen.back)
             Screen.TournamentSetup -> TournamentSetupScreen(app)
             Screen.TournamentHub -> TournamentHubScreen(app)
             is Screen.LanMenu -> LanMenuScreen(app, screen.tournament)
