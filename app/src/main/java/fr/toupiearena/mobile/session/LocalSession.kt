@@ -9,7 +9,10 @@ import fr.toupiearena.mobile.game.Stadium
 import fr.toupiearena.mobile.game.Vec2
 import kotlin.random.Random
 
-/** Combat en solo : le joueur (indice 0) contre un ou plusieurs bots. */
+/**
+ * Combat en solo : le joueur (indice 0) contre un ou plusieurs bots.
+ * `tops` : toupie du joueur puis celles des bots (2 à 4 au total), tous du même niveau.
+ */
 class LocalSession(
     private val tops: List<Top>,
     private val names: List<String>,
@@ -17,6 +20,25 @@ class LocalSession(
     private val difficulty: Difficulty,
     private val rules: MatchRules = MatchRules(),
 ) : MatchSession() {
+    /** Le joueur contre 1 à 3 bots, nommés comme sur PC (« Bot Facile » seul, « Bot 1 »… en mêlée). */
+    constructor(player: Top, opponents: List<Top>, stadium: Stadium, difficulty: Difficulty,
+                rules: MatchRules = MatchRules()) :
+        this(listOf(player) + opponents, soloNames(opponents.size, difficulty), stadium, difficulty, rules)
+
+    /** Le joueur contre un seul bot. */
+    constructor(player: Top, opponent: Top, stadium: Stadium, difficulty: Difficulty,
+                rules: MatchRules = MatchRules()) : this(player, listOf(opponent), stadium, difficulty, rules)
+
+    companion object {
+        const val MAX_BOTS = Battle.MAX_PLAYERS - 1
+
+        private fun soloNames(bots: Int, difficulty: Difficulty): List<String> {
+            require(bots in 1..MAX_BOTS) { "1 à $MAX_BOTS bots" }
+            // Seul, le bot porte sa difficulté ; en mêlée, un numéro.
+            return listOf("Vous") + (1..bots).map { "Bot ${if (bots == 1) difficulty.label else it.toString()}" }
+        }
+    }
+
     private lateinit var battle: Battle
     private val bots = mutableListOf<BotController>()
     private val angles = MutableList(tops.size) { 0.0 }
