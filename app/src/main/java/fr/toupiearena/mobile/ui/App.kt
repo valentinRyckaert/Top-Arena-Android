@@ -332,7 +332,8 @@ class AppController(private val context: Context, val scope: CoroutineScope) {
 /** Racine de l'interface : un écran à la fois. */
 @Composable
 fun ToupieApp(app: AppController) {
-    ToupieTheme {
+    androidx.compose.material3.MaterialTheme(androidx.compose.material3.darkColorScheme(primary = Holo.green, onPrimary = Holo.ink,
+        background = Holo.void, surface = Holo.panel, onSurface = Holo.text, onBackground = Holo.text, error = Holo.danger)) {
         when (val screen = app.screen) {
             Screen.Menu -> MenuScreen(app)
             Screen.SoloSetup -> SoloSetupScreen(app)
