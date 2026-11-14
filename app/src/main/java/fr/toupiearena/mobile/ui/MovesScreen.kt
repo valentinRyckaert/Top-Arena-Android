@@ -23,6 +23,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -133,10 +134,13 @@ private fun Bullet(text: String, mark: Color, color: Color) = Row(Modifier.paddi
 private fun MoveScene(move: SpecialMove, modifier: Modifier) {
     val caster = PartCatalog.presets.firstOrNull { it.special == move.id } ?: PartCatalog.presets.first()
     val target = PartCatalog.presets[(PartCatalog.presets.indexOf(caster) + 3) % PartCatalog.presets.size]
-    Canvas(modifier) {
+    Canvas(modifier.clipToBounds()) { // Rien ne déborde du cadre gris.
         drawRect(Holo.field)
-        val r = size.height * 0.16f; val y = size.height / 2
-        val a = Offset(size.width * (if (move.hitsEveryone) 0.42f else 0.2f), y); val b = Offset(size.width * 0.8f, y)
+        val y = size.height / 2
+        // Anneau : toupies plus petites et cible proche, pour que l'onde tienne dans la hauteur du cadre.
+        val r = size.height * (if (move.hitsEveryone) 0.09f else 0.16f)
+        val a = Offset(size.width * (if (move.hitsEveryone) 0.4f else 0.2f), y)
+        val b = if (move.hitsEveryone) Offset(a.x + size.height * 0.42f, y) else Offset(size.width * 0.8f, y)
         paintMoveScene(move, a, b, r)
         paintTop(target, b, r, 1f)
         paintTop(caster, a, r, 0.4f)

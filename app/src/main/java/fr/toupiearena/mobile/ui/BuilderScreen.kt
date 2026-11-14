@@ -97,9 +97,9 @@ fun BuilderScreen(app: AppController) {
     HoloScreen {
         Column(Modifier.fillMaxSize()) {
             TopBar(tr("Atelier"), { app.screen = Screen.Menu }, sub = tr("Assembler une toupie")) {
-                HoloButton(tr("Mes toupies"), { mine = true }, height = 36.dp, icon = HoloIcon.Build, textSize = 12f)
+                HoloButton(tr("Mes toupies"), { mine = true }, Modifier.width(180.dp), height = 36.dp, icon = HoloIcon.Build, textSize = 12f)
                 IconBtn(HoloIcon.Balance, { stats = true })
-                HoloButton(tr("Enregistrer"), ::save, variant = BtnVariant.Primary, height = 36.dp, icon = HoloIcon.Save, textSize = 12f)
+                HoloButton(tr("Enregistrer"), ::save, Modifier.width(170.dp), BtnVariant.Primary, height = 36.dp, icon = HoloIcon.Save, textSize = 12f)
             }
             Row(Modifier.fillMaxSize().padding(horizontal = EdgeMargin, vertical = 10.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                 Column(Modifier.width(420.dp).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
