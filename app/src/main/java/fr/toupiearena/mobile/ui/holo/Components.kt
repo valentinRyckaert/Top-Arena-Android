@@ -278,7 +278,7 @@ fun Badge(text: String, color: Color, modifier: Modifier = Modifier, height: Dp 
     }
 }
 @Composable
-fun TypeBadge(type: TopType, modifier: Modifier = Modifier) = Badge(type.label, Holo.type(type), modifier)
+fun TypeBadge(type: TopType, modifier: Modifier = Modifier) = Badge(tr(type.label), Holo.type(type), modifier)
 
 /** Barre de stat segmentée. */
 @Composable
@@ -294,9 +294,9 @@ fun StatRow(label: String, value: Int, color: Color, modifier: Modifier = Modifi
 @Composable
 fun Stats3(attack: Int, defense: Int, endurance: Int, modifier: Modifier = Modifier, gap: Dp = 8.dp) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(gap)) {
-        StatRow(TopType.Attack.label, attack, Holo.type(TopType.Attack))
-        StatRow(TopType.Defense.label, defense, Holo.type(TopType.Defense))
-        StatRow(TopType.Endurance.label, endurance, Holo.type(TopType.Endurance))
+        StatRow(tr(TopType.Attack.label), attack, Holo.type(TopType.Attack))
+        StatRow(tr(TopType.Defense.label), defense, Holo.type(TopType.Defense))
+        StatRow(tr(TopType.Endurance.label), endurance, Holo.type(TopType.Endurance))
     }
 }
 

@@ -1,9 +1,13 @@
-# Toupie Arena Mobile
+# Top Arena Mobile
 
-Version Android de [Toupie Arena](https://github.com/valentinRyckaert/TOUPIES), écrite en Kotlin
-avec Jetpack Compose. Même jeu que la version PC : combat contre le bot, atelier, tournois solo,
-tutoriel et **multijoueur en réseau local compatible avec la version PC** (mêmes règles, même
-catalogue de pièces, même protocole v4 : téléphones et PC dans un même lobby).
+Version Android de [Top Arena](https://github.com/valentinRyckaert/Top-Arena), écrite en Kotlin
+avec Jetpack Compose. Même jeu que la version PC 2.0.0 : combat contre 1 à 3 bots, atelier,
+tournois, tutoriel et **multijoueur en réseau local compatible avec la version PC** (mêmes règles,
+même catalogue de pièces, même protocole v4 : téléphones et PC dans un même lobby).
+
+L'interface reprend le design « Holo Combat » du PC, adapté au téléphone (menus intermédiaires et
+tiroirs latéraux, action principale sous le pouce droit) : voir les planches dans `design/`.
+En français ou en anglais (Paramètres > Général).
 
 ## Tester sur son téléphone
 
@@ -36,9 +40,12 @@ Pour le multijoueur, le téléphone doit être sur le même Wi-Fi que les autres
 ## Commandes
 
 L'écran est en paysage. **Visée** : glissez depuis votre toupie (direction et longueur de la flèche
-= force), relâchez pour lancer. **Duel** : touchez l'écran quand le curseur est dans la zone verte.
+= force), relâchez pour lancer. **Duel** : touchez l'écran quand le curseur est dans la zone verte
+(timing) ou le plus vite possible (rafale). Le bouton pause (ou retour) ouvre le menu du combat :
+reprendre, changer de toupies ou de schéma de commandes, aide, règles, quitter ; en solo, le jeu
+est en pause tant qu'il est ouvert.
 
-Trois schémas de commandes, au choix dans **Paramètres** :
+Trois schémas de commandes, au choix dans **Paramètres** ou dans le menu du combat :
 
 | Schéma | Piloter | Dash | Coup spécial |
 |--------|---------|------|--------------|
@@ -50,11 +57,16 @@ La page **Aide** récapitule les commandes du schéma choisi.
 
 ## Contenu
 
-- **Combat contre le bot** : choix des toupies, difficulté (facile, normal, difficile), stadium et
-  personnalisation (vitesse, rebonds, usure, dégâts, endurance, temps maximal, coups spéciaux…).
+- **Combat contre 1 à 3 bots** (duel ou mêlée) : choix des toupies, difficulté (facile, normal,
+  difficile), stadium et personnalisation (vitesse, rebonds, usure, dégâts, endurance, temps
+  maximal, coups spéciaux, type de duel…).
+- **Duels** : timing, rafale ou aucun, par défaut dans les Paramètres, modifiable dans les règles.
+- **Coups spéciaux** : une page décrit chacun (point fort, point faible, dégâts, recul, portée).
 - **Atelier** : assembler et enregistrer ses toupies (boulon, roue, partie intermédiaire, pointe).
 - **Tournois** solo ou en réseau local : ligue ou élimination directe, 4 à 32 participants, matchs
-  express ou classiques (ordre des trois toupies choisi avant chaque match).
+  express ou classiques (ordre des trois toupies choisi avant chaque match). Un tournoi solo se
+  sauvegarde en le quittant (ou si l'application passe en arrière-plan) et se reprend depuis
+  Tournois.
 - **Tutoriel** : combat guidé par des bulles qui mettent le jeu en pause à chaque action.
 - **Multijoueur en réseau local** (2 à 4 joueurs, PC et mobiles mélangés) : lobbys détectés
   automatiquement (annonces UDP, questions UDP, balayage TCP du Wi-Fi), ou connexion par nom de
@@ -66,6 +78,12 @@ La page **Aide** récapitule les commandes du schéma choisi.
 ./gradlew testDebugUnitTest   # tests JVM : moteur, bots, tournois, réseau
 ./gradlew assembleDebug        # APK de débogage
 ```
+
+Sur l'émulateur, lancez-le avec `-gpu swangle_indirect` (et `-memory 4096`) : avec
+`swiftshader_indirect` ou `-gpu guest`, qemu plante par intermittence sur le dessin des stadiums.
+
+`I18nTest` vérifie que chaque texte passé à `tr("…")` et chaque donnée affichée (pièces, stadiums,
+coups…) a sa traduction dans `app/src/main/assets/i18n/en.tsv`.
 
 Les tests de **cross-play** jouent une partie contre la bibliothèque réseau de la version PC
 (dans les deux sens : téléphone dans un lobby PC, PC dans un lobby mobile). Ils ne s'exécutent
@@ -87,8 +105,11 @@ app/src/main/java/fr/toupiearena/mobile/
   net/      protocole v4 : JsonChannel, LobbyServer, LobbyClient, LobbyBrowser, MatchCodec,
             HostSession, ClientSession, TournamentSession
   ui/       Compose : navigation (App), combat (BattleScreen), écrans, tutoriel, réglages
+  ui/holo/  design Holo Combat : couleurs, polices, composants, tiroirs, commandes, traduction
+  ui/art/   dessin procédural des toupies, stadiums et effets, porté du PC
+design/     planches SVG du design mobile et leurs générateurs
 ```
 
 Le moteur et le réseau sont en Kotlin pur (testés sur la JVM) ; toute la logique tourne sur le
 fil principal, les sockets lisent et écrivent dans des coroutines d'entrée/sortie. Les valeurs de
-jeu sont celles de la version PC 1.2.1.
+jeu sont celles de la version PC 2.0.0.

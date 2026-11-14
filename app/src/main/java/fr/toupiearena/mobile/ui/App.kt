@@ -231,7 +231,7 @@ class AppController(private val context: Context, val scope: CoroutineScope) {
             val result = s.start(settings)
             if (result.isFailure) {
                 server = null
-                message = "Le lobby n'a pas pu être créé : ${result.exceptionOrNull()?.message}"
+                message = tr("Le lobby n'a pas pu être créé : %1", result.exceptionOrNull()?.message.orEmpty())
                 return@launch
             }
             s.lobbyChanged += { bump() }
@@ -253,7 +253,7 @@ class AppController(private val context: Context, val scope: CoroutineScope) {
         }
         c.onJoinFailed = {
             client = null
-            message = "Impossible de rejoindre : $it"
+            message = tr("Impossible de rejoindre : %1", it)
         }
         c.onConnectionLost = {
             client = null

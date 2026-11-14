@@ -559,3 +559,230 @@ vous	you
 ‹ › ou molette : pièce précédente / suivante · clic : toutes les pièces	‹ › or mouse wheel: previous / next part · click: every part
 ▲ Monter	▲ Move up
 ▼ Descendre	▼ Move down
+
+# --- Mobile 2.0.0 : design Holo Combat ---
+Joystick + boutons	Joystick + buttons
+Joystick à gauche, DASH et SPÉCIAL à droite	Joystick on the left, DASH and SPECIAL on the right
+Inclinaison	Tilt
+Incliner pour piloter, boutons à droite	Tilt to steer, buttons on the right
+Gestes	Gestures
+Glisser, toucher, appui long	Swipe, tap, long press
+%1 % · ≈ %2°	%1 % · ≈ %2°
+%1/%2 joueurs	%1/%2 players
+1 à 3 bots · duel ou mêlée	1 to 3 bots · duel or melee
+« %1 » enregistrée.	"%1" saved.
+%1e place	%1th place
+%1 humains + %2 bots · %3 tours	%1 humans + %2 bots · %3 rounds
+%1 joueurs sur %2 prêts · %3	%1 of %2 players ready · %3
+%1 pièces	%1 parts
+%1 prédéfinies · %2 à vous	%1 presets · %2 of yours
+%1 prêt	%1 ready
+1 toupie	1 top
+%1 toupies	%1 tops
+%1 — une fois par partie, coûte ¼ de l'endurance du moment	%1 — once per match, costs ¼ of your current stamina
+%1 · visible en LAN	%1 · visible on LAN
+2 à 4 humains	2 to 4 humans
+4 à 32 participants	4 to 32 players
+à %1	to %1
+Affiché dans les lobbys et les tournois en réseau local (PC et mobiles).	Shown in LAN lobbies and tournaments (PC and mobile).
+à jouer	to play
+Appui	Tap
+appui long sans bouger	long press without moving
+Appui long · spécial	Long press · special
+appuyez sur DASH	press DASH
+appuyez sur SPÉCIAL	press SPECIAL
+Arrêter	Stop
+Attaque bat Endurance, Endurance bat Défense, Défense bat Attaque	Attack beats Stamina, Stamina beats Defense, Defense beats Attack
+Au bout de %1 s, le plus avancé gagne · pile au milieu : nul	After %1 s, whoever is ahead wins · dead centre: draw
+Aucun lobby détecté pour l'instant. Le téléphone doit être sur le même Wi-Fi que l'hôte.	No lobby found yet. The phone must be on the same Wi-Fi as the host.
+Aucun tournoi en cours.	No tournament in progress.
+Bat la Défense, craint l'Attaque.	Beats Defense, fears Attack.
+Bat l'Attaque, craint l'Endurance.	Beats Attack, fears Stamina.
+Bat l'Endurance, craint la Défense.	Beats Stamina, fears Defense.
+Bienvenue dans le tutoriel !\nVotre toupie est à gauche. Posez le doigt sur l'arène et glissez : la flèche donne la direction, sa longueur la force. Relâchez pour lancer.	Welcome to the tutorial!\nYour top is on the left. Put your finger on the arena and swipe: the arrow gives the direction, its length the power. Release to launch.
+Bot %1 · %2	Bot %1 · %2
+bouton DASH	DASH button
+bouton pause en haut à gauche, ou retour d'Android	pause button at the top left, or Android back
+bouton SPÉCIAL	SPECIAL button
+Bravo ! Duel gagné et toupie adverse éjectée : vous connaissez toutes les actions.	Well done! Duel won and opponent knocked out: you know every move.
+Ce nom est celui d'une toupie prédéfinie.	That name belongs to a preset top.
+Chacun sur son appareil	Each on their own device
+Changer de toupie	Change top
+Chocs	Hits
+Choisi	Selected
+Choisit sa toupie…	Choosing a top…
+Combattre	Fight
+Commandes	Controls
+Commandes · %1	Controls · %1
+complet	full
+complété par des bots	filled up with bots
+Configurer	Set up
+Connecté à %1	Connected to %1
+contre des bots	against bots
+Contre des bots	Against bots
+Contre les bots	Against bots
+Coups	Moves
+Créer et attendre les joueurs	Create and wait for players
+Créer un tournoi	Create a tournament
+Dash prêt · spécial prêt	Dash ready · special ready
+Dashs	Dashes
+déplacez le joystick à gauche	move the joystick on the left
+Dernière élimination : éjection	Last elimination: ring-out
+deux dashs qui se croisent : timing, rafale ou aucun, selon les règles	two dashes that cross: timing, rush or none, depending on the rules
+Difficulté des bots	Bot difficulty
+Difficulté du bot	Bot difficulty
+Duel !	Duel!
+Duel ! Les toupies restent bloquées. En bas, un curseur blanc parcourt votre barre : %1 quand il est dans la zone verte. Elle rétrécit à chaque réussite ; le premier qui rate subit 1,5× les dégâts du dash adverse.\nTouchez l'écran pour commencer.	Duel! The tops are locked together. At the bottom, a white cursor sweeps your bar: %1 when it is in the green zone. It shrinks after each success; the first to miss takes 1.5× the opponent's dash damage.\nTap the screen to start.
+Duel · rafale	Duel · rush
+Duels · suivent les Paramètres	Duels · follow Settings
+Durée	Time
+Éjection	Ring-out
+Élimination	Knockout
+Emplacement libre	Free slot
+En attente de l'hôte…	Waiting for the host…
+En attente de votre adversaire…	Waiting for your opponent…
+en attente d'un joueur sur le réseau local…	waiting for a player on the local network…
+En classique : trois toupies, ordre choisi avant chaque match.	In classic: three tops, order chosen before each match.
+Endurance de départ	Starting stamina
+en partie	in game
+en pause	paused
+en réseau	online
+En réseau, le combat continue pendant que ce menu est ouvert.	Online, the fight goes on while this menu is open.
+En réseau local	On local network
+Essayer	Try
+ex. « Lobby de Léa » ou 192.168.1.20:45455	e.g. "Léa's lobby" or 192.168.1.20:45455
+Express : premier à 2 manches · Classique : 3 toupies, ordre choisi avant chaque match	Express: first to 2 rounds · Classic: 3 tops, order chosen before each match
+faites un appui long sur l'écran	long-press the screen
+fixe le sens de rotation	sets the spin direction
+fonce sur l'adversaire le plus proche, avec plus d'attaque, contre un peu d'endurance	charges the nearest opponent with extra attack, for a bit of stamina
+Général	General
+glisser depuis sa toupie : la flèche donne la direction, sa longueur la force	swipe from your top: the arrow gives the direction, its length the power
+glisser le doigt (depuis l'endroit touché)	swipe your finger (from where you touched)
+Glisser · piloter	Swipe · steer
+Glissez depuis votre toupie, relâchez pour lancer	Swipe from your top, release to launch
+glissez le doigt sur l'écran	swipe your finger on the screen
+hôte	host
+Il fonce sur vous ! Répondez par un dash (%1) : deux dashs qui se percutent déclenchent un duel.	It's charging at you! Answer with a dash (%1): two dashes that collide start a duel.
+Impossible d'écrire la sauvegarde du tournoi.	Could not write the tournament save.
+Impossible d'enregistrer les toupies.	Could not save the tops.
+Inclinaison pour piloter à fond	Tilt for full steering
+incliner le téléphone (la position au début du combat sert de neutre)	tilt the phone (its position at the start of the fight is neutral)
+inclinez le téléphone	tilt the phone
+Jouer	Play
+Jouer le match	Play the match
+Joueur mobile	Mobile player
+Joueurs humains	Human players
+Joystick	Joystick
+joystick en bas à gauche (maintenu)	joystick at the bottom left (held)
+La 1re toupie joue la manche 1, la 2e la manche 2, la 3e la manche 3, puis on recommence.	The 1st top plays round 1, the 2nd round 2, the 3rd round 3, then it starts over.
+la dernière toupie en jeu gagne : éjection hors du stadium ou endurance épuisée	the last top in play wins: ring-out or stamina run out
+L'adversaire est proche : %1 pour dasher. Le dash fonce sur lui avec plus d'attaque, contre un peu d'endurance.	The opponent is close: %1 to dash. The dash charges at it with extra attack, for a bit of stamina.
+La langue change aussitôt.	The language changes right away.
+La position du téléphone au début du combat sert de neutre. Inclinez-le : la bille montre la direction du pilotage.	The phone's position at the start of the fight is neutral. Tilt it: the ball shows the steering direction.
+l'attaque adverse retire de l'endurance ; la défense réduit les dégâts et le recul	the opponent's attack drains stamina; defense reduces damage and knockback
+Le combat est en pause tant que ce menu est ouvert.	The fight is paused while this menu is open.
+l’écran	the screen
+lecture seule	read only
+Le fichier des toupies est illisible et a été ignoré.	The tops file is unreadable and was ignored.
+le percuter use un peu la rotation ; le longer ne coûte rien	hitting it wears spin a little; sliding along it is free
+Le premier qui rate subit 1,5× les dégâts du dash	The first to miss takes 1.5× the dash damage
+L'hôte ramène tout le monde au lobby…	The host brings everyone back to the lobby…
+Ligue ou élimination	League or knockout
+ligue ou élimination directe	league or knockout
+ligue ou élimination · solo ou réseau	league or knockout · solo or online
+Lobby · %1	Lobby · %1
+Lobby complet. L'hôte lancera quand tout le monde sera prêt.	Lobby full. The host will start when everyone is ready.
+Manche gagnée	Round won
+Manche nulle	Round drawn
+Manche perdue	Round lost
+Matchs	Matches
+matchs express ou classiques	express or classic matches
+Mêlée à %1 · %2 l'emporte	%1-top melee · %2 wins
+Mêlée à %1 toupies	%1-top melee
+même surface pour tous ; chacun avantage légèrement certains types	same area for all; each slightly favours some types
+Menu du combat	Fight menu
+modifiable dans les Paramètres	can be changed in Settings
+Multijoueur	Multiplayer
+OK	OK
+ordre choisi avant chaque match	order chosen before each match
+Ordre des toupies	Top order
+Ordre des toupies et jouer	Top order and play
+ou n'importe où	or anywhere
+PC et mobiles mélangés	PC and mobile together
+Piloter	Steer
+Prédéfinies	Presets
+Premier à 2 manches	First to 2 rounds
+Premier à 4 points · 3 toupies	First to 4 points · 3 tops
+Pseudo : %1	Name: %1
+Quitter : bouton retour d'Android	Leave: Android back button
+Quitter le combat	Leave the fight
+Quitter le tournoi ?	Leave the tournament?
+Raté : le curseur était dans le rouge. Attendez qu'il passe au centre, dans la zone verte. Pour cette fois, l'erreur ne compte pas !\nTouchez l'écran pour reprendre.	Missed: the cursor was in the red. Wait for it to cross the centre, in the green zone. This time the miss doesn't count!\nTap the screen to resume.
+Rebord	Rim
+Recalibrer	Recalibrate
+Recherche en continu · annonces UDP et balayage du Wi-Fi	Searching continuously · UDP announcements and Wi-Fi scan
+Recherche en cours…	Searching…
+Recommencer	Restart
+Réglages de l'hôte	Host settings
+Règles	Rules
+règles de l'hôte	host's rules
+règles du combat	fight rules
+Règles du combat	Fight rules
+relâcher le doigt	lift your finger
+Relâchez pour lancer	Release to launch
+remporte le tournoi	wins the tournament
+Reprendre	Resume
+Reprendre · %1	Resume · %1
+Réseau	Network
+réseau local	local network
+Réseau local	Local network
+Résultats	Results
+Rétablir	Reset
+Revanche	Rematch
+Sans point fort ni faiblesse marqués.	No marked strength or weakness.
+Sauvegarder	Save
+Sauvegardez-le pour le reprendre plus tard depuis Tournois (un seul emplacement).	Save it to resume later from Tournaments (single slot).
+Score	Score
+secret pour l'adversaire	hidden from your opponent
+Série	Series
+série %1	streak %1
+Série à taille minimale	Streak at minimum size
+Sonnée (%1 s)	Stunned (%1 s)
+Spécial	Special
+Stadiums	Stadiums
+Temps écoulé : victoire à l'endurance	Time up: stamina decides
+total %1 points	total %1 points
+toucher brièvement l'écran	tap the screen
+Toucher · dash	Tap · dash
+toucher l'écran (timing) ou toucher très vite (rafale)	tap the screen (timing) or tap very fast (rush)
+Toucher pour choisir	Tap to choose
+Toucher une pièce pour voir toutes les autres.	Tap a part to see all the others.
+touchez l'écran	tap the screen
+Touchez l'écran quand le curseur est dans le vert	Tap the screen when the cursor is in the green
+Touchez le plus vite possible : %1 appuis d'avance gagnent aussitôt	Tap as fast as you can: a %1-tap lead wins at once
+Toupie %1 · %2	Top %1 · %2
+Toupie tirée au hasard au lancement	Top drawn at random at launch
+tour %1/%2	round %1/%2
+Tournoi en réseau	Online tournament
+Tous les coups	All moves
+Tout le monde est prêt : vous pouvez lancer !	Everyone is ready: you can start!
+Types	Types
+un combat guidé, action par action	a guided fight, one move at a time
+une fois par partie · coûte ¼ de l’endurance	once per match · costs ¼ of stamina
+une fois par partie, coûte un quart de l'endurance	once per match, costs a quarter of stamina
+une fois par partie (donné par le boulon), coûte un quart de l'endurance du moment	once per match (given by the bolt), costs a quarter of current stamina
+Valider	Confirm
+Victoire	Victory
+Visée (tous les schémas) : glisser depuis sa toupie, relâcher pour lancer. Duel : toucher l'écran.	Aiming (all schemes): swipe from your top, release to launch. Duel: tap the screen.
+visibles par tous	visible to everyone
+visible sur le Wi-Fi	visible on Wi-Fi
+Vos toupies	Your tops
+Vos toupies : %1	Your tops: %1
+Votre coup spécial (donné par le boulon) : %1. Une seule fois par partie, il coûte un quart de l'endurance du moment et son effet compte autant que ses dégâts.	Your special move (given by the bolt): %1. Only once per match, it costs a quarter of your current stamina and its effect matters as much as its damage.
+Votre toupie : %1	Your top: %1
+Votre toupie avance seule, dans le sens inverse de sa rotation, et revient vers le centre. Pour la piloter légèrement, %1.	Your top moves on its own, against its spin, and drifts back to the centre. To steer it a little, %1.
+vous + %1 bots · %2 tours	you + %1 bots · %2 rounds
+Vous quitterez aussi le lobby ; vos matchs restants seront perdus.	You will also leave the lobby; your remaining matches will be lost.
+Vous remportez le tournoi !	You win the tournament!
+Le lobby n'a pas pu être créé : %1	The lobby could not be created: %1
+Impossible de rejoindre : %1	Could not join: %1

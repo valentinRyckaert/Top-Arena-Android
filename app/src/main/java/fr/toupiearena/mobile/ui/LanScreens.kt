@@ -279,7 +279,7 @@ fun LobbyScreen(app: AppController) {
                     label = tr("Nombre de joueurs"), height = 32.dp, enabled = hosting)
                 HoloToggle(tr("Coups spéciaux"), info.rules.specials, { if (hosting) server!!.setRules(info.rules.copy(specials = it)) })
                 HoloButton(tr("Personnalisation…"), { showRules = true }, Modifier.fillMaxWidth(), icon = HoloIcon.Sliders, height = 40.dp, textSize = 12f)
-                Hint(tr(info.rules.summary()), color = Holo.dim)
+                Hint(rulesSummary(info.rules), color = Holo.dim)
                 info.tournament?.let { t -> TournamentSettingsForm(t, info.maxPlayers, { server?.setTournamentSettings(it) }, readOnly = !hosting) }
             }
         }

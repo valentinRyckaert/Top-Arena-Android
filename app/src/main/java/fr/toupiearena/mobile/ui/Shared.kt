@@ -140,8 +140,22 @@ fun RulesForm(rules: MatchRules, onChange: (MatchRules) -> Unit, readOnly: Boole
         val follows = rules.duelMode == MatchRules.defaultDuelMode
         Segmented(DuelMode.entries.map(::duelLabel), rules.duelMode.ordinal, { if (!readOnly) onChange(rules.copy(duelMode = DuelMode.entries[it])) },
             label = if (follows) tr("Duels · suivent les Paramètres") else tr("Duels"), height = 32.dp, textSize = 11f, enabled = !readOnly)
-        Hint(rules.summary().let { tr(it) }, color = Holo.dim)
+        Hint(rulesSummary(rules), color = Holo.dim)
     }
+}
+
+/** Résumé traduit des règles (comme MatchRules.summary). */
+fun rulesSummary(r: MatchRules): String {
+    val parts = mutableListOf<String>()
+    fun percent(label: String, value: Double) { if (kotlin.math.abs(value - 1.0) >= 1e-6) parts += "$label ${(value * 100).roundToInt()} %" }
+    percent(tr("Vitesse"), r.speed); percent(tr("Rebonds"), r.knockback); percent(tr("Usure"), r.wear)
+    percent(tr("Dégâts"), r.damage); percent(tr("Dash"), r.dashPower)
+    if (kotlin.math.abs(r.maxEndurance - 100.0) >= 1e-6) parts += "${tr("Endurance")} ${r.maxEndurance.roundToInt()}"
+    if (r.timeLimit > 0.0) parts += tr("Limite %1 s", r.timeLimit.roundToInt())
+    if (r.steering <= 0.0) parts += tr("Sans pilotage") else percent(tr("Pilotage"), r.steering)
+    if (!r.specials) parts += tr("Sans coups spéciaux")
+    if (r.duelMode != MatchRules.defaultDuelMode) parts += tr("Duels : %1", duelLabel(r.duelMode))
+    return if (parts.isEmpty()) tr("Règles normales") else parts.joinToString(" · ")
 }
 
 /** Tiroir « Personnalisation » (règles du combat). */
