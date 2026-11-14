@@ -488,5 +488,202 @@ function resultBoard() {
       { title: 'Partie en réseau', draw: d => resultScreen(d, 'lan'), notes: ['Chez un client : l’hôte ramène tout le monde au lobby', 'Chez l’hôte : bouton « Retour au lobby » à la place'] }]);
 }
 
-if (require.main === module) for (const b of [principles, components, menuBoard, setupBoard, builderBoard, movesBoard, battleBoard, duelBoard, resultBoard]) b().save(OUT);
-module.exports = { principles, components, menuBoard, setupBoard, builderBoard, movesBoard, battleBoard, duelBoard, resultBoard };
+
+// ============================== M09 RÉSEAU LOCAL ==============================
+function lobbyRow(d, x, y, w, l) {
+  const out = [U.card(d, x, y, w, 56, { fill: l.inGame ? '#0B0928' : undefined })];
+  out.push(Ar.stadium(d, l.stad, x + 30, y + 28, 20));
+  out.push(D(x + 60, y + 24, l.name.toUpperCase(), { size: 13, ls: 1.2, fill: l.inGame ? C.dim : C.text }), l.tour ? L.icon('trophy', x + 66 + tw(l.name.toUpperCase(), 13, true, 1.2), y + 19, 14, C.warn) : '');
+  out.push(T(x + 60, y + 42, `${l.host} · ${l.addr}`, { size: 11.5, fill: C.muted }));
+  for (let i = 0; i < l.max; i++) out.push(path(skew(x + w - 250 + i * 16, y + 22, 12, 12, 3), { fill: i < l.n ? C.cyan : 'none', stroke: C.cyan, 'stroke-opacity': 0.7 }));
+  out.push(T(x + w - 250, y + 46, l.inGame ? 'en partie' : `${l.n}/${l.max} joueurs`, { size: 11, fill: l.inGame ? C.warn : C.muted }));
+  out.push(l.inGame ? T(x + w - 14, y + 33, 'complet', { size: 12, fill: C.dim, anchor: 'end' }) : U.btn(d, x + w - 124, y + 10, 112, 36, 'Rejoindre', { size: 11.5, variant: l.sel ? 'primary' : 'secondary' }));
+  return g(`Lobby ${l.name}`, out);
+}
+function lanScreen(d, o = {}) {
+  const out = [U.screenBg(d), U.topBar(d, 'Multijoueur', { sub: 'réseau local', actions: [{ label: 'Créer un lobby', icon: 'plus', variant: 'primary' }, { icon: 'update' }] })];
+  out.push(U.chip(d, M, 62, 'Pseudo : valentin', C.green, 'user'), T(M + U.chipW('Pseudo : valentin', 1) + 10, 79, 'modifiable dans les Paramètres', { size: 11.5, fill: C.dim }));
+  out.push(g('Recherche', [circle(PW - M - 8, 74, 4, { fill: C.green }), circle(PW - M - 8, 74, 9, { fill: 'none', stroke: C.green, opacity: 0.5 }), T(PW - M - 22, 78, 'Recherche en continu · annonces UDP et balayage du Wi-Fi', { size: 11.5, fill: C.muted, anchor: 'end' })]));
+  const lobbies = [{ name: 'Arène Nova', host: 'Nova', addr: '192.168.1.24', stad: 'volcan', n: 3, max: 4, sel: true }, { name: 'Coupe du soir', host: 'Kaï', addr: '192.168.1.31', stad: 'glace', n: 2, max: 4, tour: true },
+    { name: 'Salon de Léa', host: 'Léa (PC)', addr: '192.168.1.40', stad: 'beton', n: 2, max: 2, inGame: true }];
+  lobbies.forEach((l, i) => out.push(lobbyRow(d, M, 96 + i * 62, PW - 2 * M, l)));
+  out.push(g('Rejoindre par adresse', [rect(0, PH - 66, PW, 66, { fill: '#07061A', opacity: 0.85 }), line(M, PH - 66, PW - M, PH - 66, { stroke: C.line }),
+    field(d, M, PH - 54, PW - 2 * M - 150, 'ex. « Lobby de Léa » ou 192.168.1.20:45455', { placeholder: true }), U.btn(d, PW - M - 140, PH - 54, 140, 40, 'Rejoindre', { size: 12 })]));
+  if (o.create) out.push(U.drawer(d, 'right', 440, 'Créer un lobby', (x, y, w) => g('Formulaire', [field(d, x, y + 14, w - 10, 'Arène Nova', { label: 'Nom du lobby', focus: true }),
+    U.seg(d, x, y + 82, w - 10, ['2', '3', '4'], 2, { label: 'Joueurs', h: 32 }), label(x, y + 140, 'Stadium'),
+    ...['classique', 'beton', 'terre', 'glace', 'sable', 'volcan'].map((k, i) => U.stadiumChip(d, x + (i % 2) * ((w - 10) / 2 + 4), y + 148 + Math.floor(i / 2) * 50, (w - 10) / 2 - 4, k, { h: 44, selected: k === 'volcan' })),
+    rect(x - 22, PH - 64, w + 44, 64, { fill: '#0E0B30' }), U.btn(d, x, PH - 54, w - 10, 44, 'Créer et attendre les joueurs', { variant: 'primary', icon: 'play', size: 12.5 })]), { sub: 'visible sur le Wi-Fi' }));
+  return out;
+}
+function lobbyScreen(d, o = {}) {
+  const out = [U.screenBg(d), U.topBar(d, 'Lobby · Arène Nova', { backIcon: 'quit', actions: [{ label: o.client ? 'Je suis prêt' : 'Lancer', icon: o.client ? 'check' : 'play', variant: 'primary' }, { icon: 'sliders', on: o.settings }] })];
+  out.push(U.chip(d, M, 62, o.client ? 'Client' : 'Hôte', C.green, 'star'), U.chip(d, M + 78, 62, '192.168.1.24 · visible en LAN', C.cyan, 'wifi'));
+  const slots = [{ who: 'Nova', sub: 'vous · hôte', p: P['Cyclone Furieux'], st: 'Prêt', col: C.green }, { who: 'Kaï', sub: '192.168.1.31', p: P['Colosse'], st: 'Prêt', col: C.green },
+    { who: 'Mira', sub: '192.168.1.40', p: P['Éternelle'], st: 'Choisit sa toupie…', col: C.warn }, null];
+  const cw = (PW - 2 * M - 10) / 2;
+  slots.forEach((sl, i) => {
+    const x = M + (i % 2) * (cw + 10), y = 98 + Math.floor(i / 2) * 104;
+    if (!sl) { out.push(g('Emplacement libre', [path(chamfer(x, y, cw, 96, [10, 0, 10, 0]), { fill: 'none', stroke: C.line, 'stroke-dasharray': '6 6' }), D(x + cw / 2, y + 46, 'EMPLACEMENT LIBRE', { size: 12, ls: 2, fill: C.dim, anchor: 'middle' }), T(x + cw / 2, y + 66, 'en attente d’un joueur sur le réseau local…', { size: 11.5, fill: C.dim, anchor: 'middle' })])); return; }
+    out.push(g(`Joueur ${sl.who}`, [U.card(d, x, y, cw, 96, { selected: i === 0 }), label(x + 12, y + 18, `J${i + 1}`, C.dim), Ar.top(d, x + 50, y + 54, 30, sl.p, { angle: 0.6, shadow: false }),
+      D(x + 92, y + 36, sl.who.toUpperCase(), { size: 15, ls: 1.4 }), T(x + 92, y + 53, sl.sub, { size: 11.5, fill: C.muted }), D(x + 92, y + 76, sl.p.name.toUpperCase(), { size: 11, ls: 1 }), U.badge(d, x + 96 + tw(sl.p.name.toUpperCase(), 11, true, 1), y + 64, sl.p.type, { h: 14, size: 8 }),
+      path(skew(x + cw - 146, y + 14, 134, 26, 8), { fill: sl.col, 'fill-opacity': 0.14, stroke: sl.col }), D(x + cw - 79, y + 31, sl.st.toUpperCase(), { size: 9, fill: sl.col, anchor: 'middle', ls: 0.6 })]));
+  });
+  out.push(g('Bas du lobby', [rect(0, PH - 66, PW, 66, { fill: '#07061A', opacity: 0.85 }), line(M, PH - 66, PW - M, PH - 66, { stroke: C.line }),
+    U.btn(d, M, PH - 54, 300, 42, 'Votre toupie : Cyclone Furieux', { icon: 'build', size: 11.5 }),
+    T(PW / 2 + 40, PH - 28, '2 joueurs sur 3 prêts · volcan · 4 places', { size: 12.5, fill: C.warn, anchor: 'middle' }),
+    U.btn(d, PW - M - 170, PH - 54, 170, 42, o.client ? 'Quitter' : 'Fermer le lobby', { variant: 'danger', icon: 'quit', size: 11.5 })]));
+  if (o.settings) out.push(U.drawer(d, 'right', 430, 'Réglages de l’hôte', (x, y, w) => g('Réglages', [label(x, y + 8, 'Stadium'), U.stadiumChip(d, x, y + 16, w - 10, 'volcan', { selected: true, h: 52 }),
+    U.seg(d, x, y + 98, w - 10, ['2', '3', '4'], 2, { label: 'Nombre de joueurs', h: 32 }), U.toggle(d, x, y + 146, w - 10, 'Coups spéciaux', true), U.toggle(d, x, y + 186, w - 10, 'Limite de temps', false),
+    U.btn(d, x, y + 226, w - 10, 40, 'Personnalisation…', { icon: 'sliders', size: 12 }),
+    T(x, y + 290, 'Mêlée à 3-4 : éliminer un adversaire touché dans les', { size: 11.5, fill: C.dim }), T(x, y + 306, '4 s rend 35 d’endurance. Visible par tous les joueurs.', { size: 11.5, fill: C.dim })]), { sub: 'visibles par tous' }));
+  return out;
+}
+function lanBoard() {
+  return U.board('m09-ecran-reseau-local', 'Mobile · écran', 'Multijoueur en réseau local', 'Compatible avec le PC (protocole 4). La liste des lobbys prend tout l’écran ; créer et régler passent dans des tiroirs.',
+    [{ title: 'Lobbys détectés', draw: d => lanScreen(d), notes: ['Recherche en continu, un bouton « Rejoindre » par lobby', 'Par nom ou par adresse IP en bas de l’écran'] },
+      { title: 'Tiroir : créer un lobby', draw: d => lanScreen(d, { create: true }), notes: ['Nom, nombre de joueurs et stadium', 'Depuis Tournois ▸ réseau, le tiroir ajoute les réglages du tournoi'] },
+      { title: 'Lobby · hôte', draw: d => lobbyScreen(d), notes: ['Quatre places en grille, état de chaque joueur', '« Lancer » s’active quand tout le monde est prêt'] },
+      { title: 'Tiroir : réglages de l’hôte', draw: d => lobbyScreen(d, { settings: true }), notes: ['Stadium, joueurs, coups spéciaux, durée, personnalisation', 'Chez un client, le même tiroir est en lecture seule'] }]);
+}
+
+// ============================== M10 TOURNOIS ==============================
+function tournamentHub(d) {
+  const out = [U.screenBg(d), U.topBar(d, 'Tournois', { sub: 'ligue ou élimination directe' })];
+  const cards = [['Reprendre', 'save', C.warn, 'Coupe Néon', ['Élimination · 8 joueurs', 'Express · tour 2/3', 'sauvegardé hier, 21:40']],
+    ['Tournoi solo', 'trophy', C.green, 'Contre des bots', ['Ligue ou élimination', '4 à 32 participants', 'matchs express ou classiques']],
+    ['En réseau local', 'lan', C.cyan, '2 à 4 humains', ['Chacun sur son appareil', 'PC et mobiles mélangés', 'complété par des bots']]];
+  const cw = (PW - 2 * M - 20) / 3;
+  cards.forEach(([t, ic, col, sub, lines], i) => {
+    const x = M + i * (cw + 10), y = 66;
+    out.push(g(`Carte ${t}`, [U.card(d, x, y, cw, 324, { selected: i === 0, accent: col }), circle(x + cw / 2, y + 86, 46, { fill: col, opacity: 0.12 }), circle(x + cw / 2, y + 86, 46, { fill: 'none', stroke: col, 'stroke-opacity': 0.6 }),
+      L.icon(ic, x + cw / 2, y + 86, 40, col), D(x + cw / 2, y + 166, t.toUpperCase(), { size: 16, ls: 1.8, anchor: 'middle' }), T(x + cw / 2, y + 186, sub, { size: 13, fill: col, anchor: 'middle' }),
+      ...lines.map((l, k) => T(x + cw / 2, y + 214 + k * 18, l, { size: 12, fill: C.muted, anchor: 'middle' })),
+      U.btn(d, x + 14, y + 266, cw - 28, 44, i === 0 ? 'Reprendre' : 'Configurer', { variant: i === 0 ? 'primary' : 'secondary', icon: i === 0 ? 'play' : 'next', size: 12.5 })]));
+  });
+  return out;
+}
+function tournamentSetup(d) {
+  const out = [U.screenBg(d), U.topBar(d, 'Tournoi solo', { sub: 'contre des bots', actions: [{ label: 'Lancer', icon: 'play', variant: 'primary' }, { icon: 'sliders' }] })];
+  const x = M, w = 420;
+  out.push(U.seg(d, x, 80, w, ['Ligue', 'Élimination'], 1, { label: 'Format', h: 34 }));
+  out.push(label(x, 140, 'Participants'), U.iconBtn(d, x, 148, 44, 38, 'back', { size: 16 }), path(chamfer(x + 50, 148, 90, 38, [8, 0, 8, 0]), { fill: '#07061A', stroke: C.line }),
+    D(x + 95, 174, '8', { size: 18, anchor: 'middle' }), U.iconBtn(d, x + 146, 148, 44, 38, 'next', { size: 16 }), T(x + 206, 172, 'vous + 7 bots · 3 tours', { size: 12.5, fill: C.muted }));
+  out.push(U.seg(d, x, 216, w, ['Express', 'Classique'], 0, { label: 'Matchs', h: 34 }), T(x, 266, 'Express : premier à 2 manches · Classique : 3 toupies, ordre choisi avant chaque match', { size: 11.5, fill: C.dim }));
+  out.push(U.seg(d, x, 300, w, ['Facile', 'Normal', 'Difficile'], 2, { label: 'Difficulté des bots', h: 34 }));
+  const rx = M + w + 24, rw = PW - M - rx;
+  out.push(U.panel(d, rx, 66, rw, 160, { title: 'Votre toupie', index: '1 TOUPIE' }), U.topRow(d, rx + 12, 106, rw - 24, P['Cyclone Furieux'], { chevron: true, h: 50 }),
+    T(rx + 12, 186, 'En classique : trois toupies,', { size: 12, fill: C.dim }), T(rx + 12, 202, 'ordre choisi avant chaque match.', { size: 12, fill: C.dim }));
+  out.push(label(rx, 248, 'Stadium'), U.stadiumChip(d, rx, 256, rw, 'glace', { selected: true, h: 52 }), U.btn(d, rx, 320, rw, 40, 'Stadium au hasard à chaque match', { variant: 'ghost', icon: 'random', size: 10.5 }));
+  return out;
+}
+const BR = [[['Vous', 2, 'Cyclone Furieux'], ['Atlas', 0, 'Gardienne']], [['Kira', 2, 'Éternelle'], ['Rook', 1, 'Colosse']], [['Vega', 0, 'Comète'], ['Lyn', 2, 'Juste Milieu']], [['Orion', 2, 'Brise Éternelle'], ['Sol', 1, 'Forteresse']]];
+function matchBox(d, x, y, w, pair, o = {}) {
+  const out = [U.card(d, x, y, w, 52, { selected: o.me, accent: C.green, stroke: o.todo ? C.green : undefined })];
+  pair.forEach(([n, sc, top], k) => { const yy = y + 18 + k * 24; out.push(top ? Ar.top(d, x + 16, yy - 4, 8, P[top], { shadow: false }) : '', D(x + 30, yy, (n || 'À déterminer').toUpperCase(), { size: 10.5, ls: 0.8, fill: n ? (n === 'Vous' ? C.green : C.text) : C.dim }),
+    sc !== undefined ? D(x + w - 10, yy, String(sc), { size: 11, anchor: 'end', fill: sc === 2 ? C.green : C.muted }) : ''); });
+  if (o.todo) out.push(path(skew(x + w - 66, y - 8, 60, 14, 4), { fill: C.green }), D(x + w - 36, y + 2, 'À JOUER', { size: 8.5, fill: '#03140A', anchor: 'middle', ls: 0.8 }));
+  return g('Match', out);
+}
+function bracketScreen(d, o = {}) {
+  const out = [U.screenBg(d), U.topBar(d, 'Coupe Néon', { backIcon: 'quit', sub: 'élimination · 8 · express', actions: [{ label: 'Résultats', icon: 'trophy', on: o.results }] })];
+  const bx = M, by = 64, cw = 150, colX = [bx, bx + 186, bx + 372];
+  ['Quarts', 'Demi-finales', 'Finale'].forEach((t, i) => out.push(label(colX[i], by + 8, t, i === 1 ? C.green : C.muted)));
+  BR.forEach((pair, i) => out.push(matchBox(d, colX[0], by + 18 + i * 76, cw, pair, { me: i === 0 })));
+  out.push(matchBox(d, colX[1], by + 56, cw, [['Vous', 0, 'Cyclone Furieux'], ['Kira', 0, 'Éternelle']], { me: true, todo: true }), matchBox(d, colX[1], by + 208, cw, [['Lyn', undefined, 'Juste Milieu'], ['Orion', undefined, 'Brise Éternelle']]));
+  out.push(matchBox(d, colX[2], by + 132, cw, [[null], [null]]));
+  const ln = (x1, y1, x2, y2, col = C.line) => path(`M${x1},${y1} H${(x1 + x2) / 2} V${y2} H${x2}`, { fill: 'none', stroke: col, 'stroke-width': 1.4 });
+  out.push(ln(colX[0] + cw, by + 44, colX[1], by + 82, C.green), ln(colX[0] + cw, by + 120, colX[1], by + 82), ln(colX[0] + cw, by + 196, colX[1], by + 234), ln(colX[0] + cw, by + 272, colX[1], by + 234),
+    ln(colX[1] + cw, by + 82, colX[2], by + 158), ln(colX[1] + cw, by + 234, colX[2], by + 158));
+  out.push(g('Défilement horizontal', [rect(bx, PH - 12, 520, 3, { fill: C.line }), rect(bx, PH - 12, 360, 3, { fill: C.cyan }), T(bx + 530, PH - 8, 'faire glisser · pincer pour zoomer', { size: 10.5, fill: C.dim })]));
+  const rx = 580, rw = PW - M - rx;
+  out.push(U.panel(d, rx, 64, rw, 332, { title: 'Votre match', index: 'DEMI-FINALE' }), Ar.top(d, rx + 70, 152, 40, P['Cyclone Furieux'], { aura: true, angle: 0.4 }), Ar.top(d, rx + rw - 70, 152, 40, P['Éternelle'], { aura: true, angle: 1 }),
+    D(rx + rw / 2, 160, 'VS', { size: 22, anchor: 'middle', italic: true }), D(rx + 70, 216, 'VOUS', { size: 14, anchor: 'middle', fill: C.green }), T(rx + 70, 232, 'Cyclone Furieux', { size: 11, fill: C.muted, anchor: 'middle' }),
+    D(rx + rw - 70, 216, 'KIRA', { size: 14, anchor: 'middle', fill: C.danger }), T(rx + rw - 70, 232, 'Éternelle · difficile', { size: 11, fill: C.muted, anchor: 'middle' }),
+    T(rx + rw / 2, 266, 'Premier à 2 manches · stadium Glace', { size: 12, anchor: 'middle' }), U.btn(d, rx + 14, 334, rw - 28, 48, 'Jouer le match', { variant: 'primary', icon: 'play' }));
+  if (o.results) out.push(U.drawer(d, 'left', 420, 'Tours et résultats', (x, y, w) => g('Résultats', [label(x, y + 8, 'Quarts de finale · 4 / 4', C.cyan),
+    ...BR.map((pr, i) => g('Résultat', [U.card(d, x, y + 16 + i * 46, w - 10, 40, { selected: i === 0, accent: C.green }), D(x + 14, y + 16 + i * 46 + 25, pr[0][0].toUpperCase(), { size: 12, fill: pr[0][0] === 'Vous' ? C.green : C.text }),
+      D(x + (w - 10) / 2, y + 16 + i * 46 + 25, `${pr[0][1]} – ${pr[1][1]}`, { size: 13, fill: C.cyan, anchor: 'middle' }), D(x + w - 24, y + 16 + i * 46 + 25, pr[1][0].toUpperCase(), { size: 12, anchor: 'end' })])),
+    label(x, y + 212, 'Demi-finales · 0 / 2', C.cyan), T(x, y + 234, 'Vous – Kira · à jouer', { size: 12.5 }), T(x, y + 254, 'Lyn – Orion · en attente', { size: 12.5, fill: C.muted })]), { sub: 'tour 2 / 3' }));
+  return out;
+}
+function leagueScreen(d) {
+  const out = [U.screenBg(d), U.topBar(d, 'Ligue des Néons', { backIcon: 'quit', sub: 'ligue · 6 · classique', actions: [{ label: 'Résultats', icon: 'trophy' }] })];
+  const x = M, w = 540, rows = [['Vous', 'Cyclone Furieux', 4, 3, 1, 9, '+5'], ['Kira', 'Éternelle', 4, 3, 1, 9, '+3'], ['Rook', 'Colosse', 4, 2, 2, 6, '0'], ['Lyn', 'Juste Milieu', 4, 2, 2, 6, '−1'], ['Atlas', 'Gardienne', 4, 1, 3, 3, '−3'], ['Sol', 'Forteresse', 4, 1, 3, 3, '−4']];
+  const cols = [w - 210, w - 165, w - 120, w - 70, w - 16];
+  ['J', 'V', 'D', 'Pts', 'Diff.'].forEach((c, i) => out.push(label(x + cols[i], 74, c, C.muted, { anchor: 'end' })));
+  rows.forEach((r, i) => {
+    const y = 82 + i * 46, me = r[0] === 'Vous', pod = [C.warn, '#C9D8FF', '#FF9A5A'][i];
+    out.push(g(`Rang ${i + 1}`, [U.card(d, x, y, w, 40, { selected: me, accent: C.green }), D(x + 16, y + 26, String(i + 1), { size: 15, fill: pod || C.dim }),
+      Ar.top(d, x + 50, y + 20, 13, P[r[1]], { shadow: false }), D(x + 72, y + 19, r[0].toUpperCase(), { size: 12.5, fill: me ? C.green : C.text }), T(x + 72, y + 33, r[1], { size: 11, fill: C.muted }),
+      ...r.slice(2).map((v, k) => D(x + cols[k], y + 26, String(v), { size: 13, anchor: 'end', fill: k === 3 ? C.text : k === 4 ? (String(v).startsWith('+') ? C.green : String(v) === '0' ? C.muted : C.danger) : C.muted }))]));
+  });
+  const rx = x + w + 16, rw = PW - M - rx;
+  out.push(U.panel(d, rx, 64, rw, 332, { title: 'Votre match', index: 'JOURNÉE 5/5' }), Ar.top(d, rx + rw / 2 - 52, 140, 30, P['Cyclone Furieux'], { angle: 0.4 }), Ar.top(d, rx + rw / 2 + 52, 140, 30, P['Colosse'], { angle: 1 }),
+    D(rx + rw / 2, 146, 'VS', { size: 16, anchor: 'middle', italic: true }), T(rx + rw / 2, 196, 'Vous contre Rook', { size: 13, anchor: 'middle' }), T(rx + rw / 2, 214, 'classique · 3 toupies', { size: 11.5, fill: C.muted, anchor: 'middle' }),
+    U.btn(d, rx + 12, 286, rw - 24, 40, 'Ordre des toupies', { icon: 'sliders', size: 11.5 }), U.btn(d, rx + 12, 334, rw - 24, 48, 'Jouer', { variant: 'primary', icon: 'play' }));
+  return out;
+}
+function tournamentBoard() {
+  return U.board('m10-ecran-tournois', 'Mobile · écran', 'Tournois', 'Un écran d’accueil avec la reprise d’un tournoi sauvegardé ; le tableau défile, « Votre match » reste à portée de pouce.',
+    [{ title: 'Accueil des tournois', draw: d => tournamentHub(d), notes: ['Reprendre le tournoi solo sauvegardé (un seul emplacement)', 'Ou en configurer un nouveau, solo ou en réseau local'] },
+      { title: 'Configuration solo', draw: d => tournamentSetup(d), notes: ['Format, participants, matchs, difficulté ; règles dans le tiroir', 'Lancer en haut à droite, comme « Enregistrer » dans l’atelier'] },
+      { title: 'Élimination directe', draw: d => bracketScreen(d), notes: ['Tableau complet défilant (16 ou 32 joueurs : on fait glisser)', 'Quitter propose de sauvegarder (solo) ou demande confirmation (réseau)'] },
+      { title: 'Tiroir : tours et résultats', draw: d => bracketScreen(d, { results: true }), notes: ['Tous les scores, tour par tour', 'Le tableau reste visible sous le voile'] },
+      { title: 'Ligue · classement', draw: d => leagueScreen(d), notes: ['Podium coloré, vous en vert, différence de buts', 'En classique, l’ordre des trois toupies se choisit avant chaque match'] }]);
+}
+
+// ============================== M11 PARAMÈTRES ET AIDE ==============================
+function rail(d, items, sel) {
+  return g('Onglets', items.map(([t, ic], i) => { const y = 66 + i * 54, on = i === sel;
+    return g(`Onglet ${t}`, [U.card(d, M, y, 170, 46, { selected: on, accent: C.green }), L.icon(ic, M + 24, y + 23, 18, on ? C.green : C.muted), D(M + 44, y + 28, t.toUpperCase(), { size: 12, ls: 1.2, fill: on ? C.text : C.muted })]); }));
+}
+function settingsScreen(d, tab) {
+  const out = [U.screenBg(d), U.topBar(d, 'Paramètres', {}), rail(d, [['Général', 'gear'], ['Commandes', 'hand'], ['Réseau', 'wifi']], tab)];
+  const x = M + 190, w = PW - M - x;
+  if (tab === 0) {
+    out.push(U.panel(d, x, 64, w, 120, { title: 'Langue' }), U.seg(d, x + 14, 104, 300, ['Français', 'English'], 0, { h: 34 }), T(x + 330, 126, 'Le jeu redémarre pour changer de langue.', { size: 12, fill: C.muted }));
+    out.push(U.panel(d, x, 194, w, 206, { title: 'Duels' }), U.seg(d, x + 14, 234, w - 28, ['Timing', 'Rafale', 'Sans duel'], 0, { h: 34 }),
+      T(x + 14, 292, 'Touchez l’écran quand le curseur traverse la zone verte, de plus en plus étroite :', { size: 12.5 }),
+      T(x + 14, 310, 'un raté perd le duel.', { size: 12.5 }),
+      T(x + 14, 340, 'C’est le duel par défaut des combats, des parties en réseau et des tournois ;', { size: 11.5, fill: C.dim }),
+      T(x + 14, 356, 'la personnalisation des règles permet d’en choisir un autre.', { size: 11.5, fill: C.dim }));
+  } else if (tab === 1) {
+    const cards = [['Joystick + boutons', 'Joystick à gauche, DASH et SPÉCIAL à droite', 'buttons'], ['Inclinaison', 'Incliner pour piloter, boutons à droite', 'tilt'], ['Gestes', 'Glisser, toucher, appui long', 'gestures']];
+    const cw = (w - 20) / 3;
+    cards.forEach(([t, sub, k], i) => { const cx = x + i * (cw + 10), on = i === 1;
+      out.push(g(`Schéma ${t}`, [U.card(d, cx, 64, cw, 196, { selected: on, accent: C.green }), path(chamfer(cx + 12, 76, cw - 24, 96, [8, 0, 8, 0]), { fill: '#07061A', stroke: C.line }),
+        k === 'buttons' ? [circle(cx + 46, 136, 20, { fill: 'none', stroke: C.lineHi }), circle(cx + 52, 130, 9, { fill: C.green }), circle(cx + cw - 46, 140, 15, { fill: C.green, opacity: 0.4, stroke: C.green }), circle(cx + cw - 80, 148, 11, { fill: C.magenta, opacity: 0.4, stroke: C.magenta })].join('') : '',
+        k === 'tilt' ? `<g transform="rotate(-15 ${cx + cw / 2} 124)">${L.icon('phone', cx + cw / 2, 124, 54, C.cyan)}</g>` + path(`M${cx + cw / 2 - 40},158 Q${cx + cw / 2},170 ${cx + cw / 2 + 40},158`, { fill: 'none', stroke: C.green, 'stroke-width': 2 }) : '',
+        k === 'gestures' ? L.icon('hand', cx + cw / 2, 124, 46, C.cyan) + path(`M${cx + 30},150 Q${cx + cw / 2},110 ${cx + cw - 30},140`, { fill: 'none', stroke: C.green, 'stroke-width': 2, 'stroke-dasharray': '4 4' }) : '',
+        D(cx + 12, 194, t.toUpperCase(), { size: 11.5, ls: 1 }), T(cx + 12, 212, sub, { size: 11, fill: C.muted }), on ? L.icon('check', cx + cw - 18, 194 - 4, 14, C.green) : '',
+        T(cx + 12, 244, on ? 'Choisi' : 'Toucher pour choisir', { size: 11, fill: on ? C.green : C.dim })]));
+    });
+    out.push(U.slider(d, x, 276, w - 160, 'Inclinaison pour piloter à fond', 0.42, '35 % · ≈ 20°'), U.btn(d, PW - M - 146, 284, 146, 40, 'Essayer', { variant: 'ghost', icon: 'phone', size: 11.5 }),
+      T(x, 352, 'Visée (tous les schémas) : glisser depuis sa toupie, relâcher pour lancer.', { size: 12, fill: C.muted }), T(x, 370, 'Duel : toucher l’écran. Vibrations à chaque choc.', { size: 12, fill: C.muted }));
+  }
+  return out;
+}
+function helpScreen(d, tab) {
+  const out = [U.screenBg(d), U.topBar(d, 'Aide', { actions: [{ label: 'Paramètres', icon: 'gear' }] }), rail(d, [['Commandes', 'hand'], ['Règles', 'balance'], ['Coups', 'bolt']], tab)];
+  const x = M + 190, w = PW - M - x;
+  const rows = tab === 0 ? [['Visée', 'glisser depuis sa toupie : la flèche donne la direction, sa longueur la force'], ['Lancer', 'relâcher le doigt'],
+    ['Piloter', 'inclinaison du téléphone (schéma choisi : Inclinaison)'], ['Dash', 'bouton DASH'], ['Coup spécial', 'bouton SPÉCIAL — une fois par partie, coûte ¼ de l’endurance'],
+    ['Duel', 'toucher l’écran (timing) ou toucher très vite (rafale)'], ['Menu du combat', 'bouton pause en haut à gauche, ou retour d’Android']]
+    : [['Victoire', 'la dernière toupie en jeu gagne : éjection ou endurance épuisée'], ['Chocs', 'l’attaque adverse retire de l’endurance, la défense réduit dégâts et recul'],
+      ['Rebord', 'le percuter use un peu la rotation ; le longer ne coûte rien'], ['Dash', 'fonce sur l’adversaire le plus proche, avec plus d’attaque'],
+      ['Duels', 'deux dashs qui se croisent : timing, rafale ou aucun, selon les règles'], ['Types', 'Attaque bat Endurance, Endurance bat Défense, Défense bat Attaque'],
+      ['Stadiums', 'même surface pour tous ; chacun avantage légèrement certains types']];
+  out.push(U.panel(d, x, 64, w, 336, { title: tab === 0 ? 'Commandes · inclinaison' : 'Règles du combat' }));
+  rows.forEach(([a, b], i) => out.push(D(x + 14, 112 + i * 40, a.toUpperCase(), { size: 11.5, ls: 1, fill: C.green }), T(x + 150, 112 + i * 40, b, { size: 12.5 }), i < rows.length - 1 ? line(x + 14, 124 + i * 40, x + w - 14, 124 + i * 40, { stroke: C.line, opacity: 0.5 }) : ''));
+  return out;
+}
+function settingsBoard() {
+  return U.board('m11-ecran-parametres-aide', 'Mobile · écran', 'Paramètres et aide', 'Onglets à gauche, contenu à droite : rien à faire défiler sur un téléphone en paysage.',
+    [{ title: 'Paramètres · général', draw: d => settingsScreen(d, 0), notes: ['Langue (le jeu redémarre) et type de duel par défaut', 'Réseau : le pseudo affiché dans les lobbys'] },
+      { title: 'Paramètres · commandes', draw: d => settingsScreen(d, 1), notes: ['Les trois schémas illustrés ; l’inclinaison a sa sensibilité', '« Essayer » montre le neutre et la bille en direct'] },
+      { title: 'Aide · commandes', draw: d => helpScreen(d, 0), notes: ['Rappel des gestes du schéma choisi', 'Raccourci vers les Paramètres en haut à droite'] },
+      { title: 'Aide · règles', draw: d => helpScreen(d, 1), notes: ['Règles du combat en une page', 'L’onglet Coups ouvre la page des coups spéciaux'] }]);
+}
+
+if (require.main === module) for (const b of [principles, components, menuBoard, setupBoard, builderBoard, movesBoard, battleBoard, duelBoard, resultBoard, lanBoard, tournamentBoard, settingsBoard]) b().save(OUT);
+module.exports = { principles, components, menuBoard, setupBoard, builderBoard, movesBoard, battleBoard, duelBoard, resultBoard, lanBoard, tournamentBoard, settingsBoard };
