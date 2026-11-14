@@ -6,14 +6,19 @@ import fr.toupiearena.mobile.game.MatchFormat
 import fr.toupiearena.mobile.game.MatchRules
 import fr.toupiearena.mobile.game.MatchSeries
 import fr.toupiearena.mobile.game.Participant
+import fr.toupiearena.mobile.game.SavedTournament
 import fr.toupiearena.mobile.game.Stadium
 import fr.toupiearena.mobile.game.Tournament
 import fr.toupiearena.mobile.game.TournamentFormat
 import fr.toupiearena.mobile.game.TournamentSettings
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.io.File
+import java.nio.file.Files
 
 class TournamentTest {
     private fun people(n: Int, tops: Int = 1) = (0 until n).map { i ->
@@ -66,6 +71,24 @@ class TournamentTest {
         assertEquals(t.toJson().toString(), copy!!.toJson().toString())
         while (!t.isFinished) { playRound(t); t.nextRound() }
         assertEquals(0, t.champion)
+    }
+
+    @Test fun savedTournamentRoundTrip() {
+        val dir = Files.createTempDirectory("toupie").toFile() // Jamais le tournoi du joueur.
+        val saved = SavedTournament(File(dir, "solo-tournament.json"))
+        assertFalse(saved.exists)
+        assertNull(saved.load())
+        val t = Tournament.create(settings(TournamentFormat.League, 6), people(6), 9)
+        playRound(t)
+        t.nextRound()
+        assertTrue(saved.save(t))
+        assertTrue(saved.exists)
+        val loaded = saved.load()
+        assertNotNull(loaded)
+        assertEquals(t.toJson().toString(), loaded!!.toJson().toString())
+        saved.clear()
+        assertFalse(saved.exists)
+        dir.deleteRecursively()
     }
 
     @Test fun botMatchHasWinner() {
