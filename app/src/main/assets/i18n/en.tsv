@@ -1,0 +1,561 @@
+# Traductions anglaises (texte source français → anglais). Générées depuis le jeu PC
+# (src/i18n/toparena_en.ts), puis complétées pour le mobile. Échappements : \n \t \\.
+  ★ perso	  ★ custom
+ (en partie)	 (in game)
+ (hôte)	 (host)
+ pts	 pts
+ · %1 coup spécial	 · %1 special move
+ — détails…	 — details…
+ — modifier…	 — edit…
+ — vous	 — you
+%1  ·  %2	%1  ·  %2
+%1 %2 %	%1 %2%
+%1 %2 %3 %4 piloter · %5 dash	%1 %2 %3 %4 steer · %5 dash
+%1 (%2)	%1 (%2)
+%1 (tournoi)	%1 (tournament)
+%1 (vous)	%1 (you)
+%1 / %2	%1 / %2
+%1 : série réussie	%1: streak complete
+%1 PTS	%1 PTS
+%1 disponible	%1 ready
+%1 joueurs	%1 players
+%1 le plus vite possible pendant 3,5 s	%1 as fast as you can for 3.5 s
+%1 ou %2	%1 or %2
+%1 participants	%1 players
+%1 perd le duel	%1 loses the duel
+%1 quand le curseur est dans la zone verte	%1 when the cursor is in the green zone
+%1 remporte le combat	%1 wins the battle
+%1 s	%1s
+%1 · %2	%1 · %2
+%1 · %2 · %3 participants%4	%1 · %2 · %3 participants%4
+%1 · bot %2	%1 · %2 bot
+%1 · match %2 · %3 participants — %4, là où vous l'avez laissé.	%1 · %2 matches · %3 players — %4, right where you left it.
+%1 — une fois par partie, coûte un quart de l'endurance du moment	%1 — once per game, costs a quarter of current stamina
+%1 — utilisé	%1 — used
+(aucune adresse réseau, port %1)	(no network address, port %1)
+(sans nom)	(unnamed)
++60 %	+60%
+16e	R32
+3 s gelée : ralentie, sans pilotage, usée ×3	Frozen for 3 s: slowed, no steering, worn ×3
+6 S	6 S
+8e	R16
+<b>Action</b>	<b>Action</b>
+<b>Entrée 1</b>	<b>Input 1</b>
+<b>Entrée 2</b>	<b>Input 2</b>
+<b>F11</b>	<b>F11</b>
+<b>Échap</b>	<b>Esc</b>
+<p><b>Repères</b> — Une toupie éjectée ou à court d'endurance perd. Attaque bat Endurance, Endurance bat Défense, Défense bat Attaque ; chaque stadium avantage légèrement certains types.</p>	<p><b>Tips</b> — A top that is knocked out or runs out of stamina loses. Attack beats Stamina, Stamina beats Defense, Defense beats Attack; each stadium slightly favors certain types.</p>
+A %1 · D %2 · E %3	A %1 · D %2 · S %3
+ATT %1	ATK %1
+Abandon (joueur déconnecté)	Forfeit (player disconnected)
+Abandonner ce match ? Votre adversaire le remportera.	Forfeit this match? Your opponent will win it.
+Abandonner le match	Forfeit match
+Actualiser	Refresh
+Adresse	Address
+Adversaires	Opponents
+Aide	Help
+Aide — commandes	Help — controls
+Aiguille	Needle
+Alt	Alt
+Aléatoire	Random
+Anneau	Ring
+Anneau qui balaie tout le stadium et aspire violemment toutes les toupies vers le centre : provoque la mêlée et empêche de fuir (pas de dash pendant l'aspiration). Dégâts modérés, mais les cibles s'éloignent du bord.	A ring that sweeps the whole stadium and violently pulls every top to the centre: it starts a brawl and stops anyone from fleeing (no dash while pulled). Moderate damage, but targets end up away from the rim.
+Anneau qui repousse violemment toutes les toupies proches : idéal pour éjecter une cible déjà au bord. Dégâts faibles, portée courte.	A ring that violently pushes back all nearby tops: ideal for knocking out a target already at the edge. Low damage, short range.
+Annuler	Cancel
+Anti-horaire	Counter-clockwise
+Aperçu en rotation	Spinning preview
+Appuyez sur %1 quand le curseur traverse la zone verte, de plus en plus étroite : un raté perd le duel.	Press %1 when the cursor crosses the green zone, which keeps narrowing: a miss loses the duel.
+Appuyez sur une touche…	Press a key…
+Arène de terre battue sans rebord. Le sol accroche la pointe : la rotation s'use plus vite et les chocs frappent fort ; les dashs sont un peu plus courts.	Packed-dirt arena with no rim. The ground grips the tip: spin wears off faster and hits land hard; dashes are a bit shorter.
+Aspire tout le stadium vers le centre, sans dash possible	Pulls the whole stadium to the centre, no dash allowed
+Assemblage incomplet.	Build incomplete.
+Assembler une toupie	Build a top
+Assemblez votre toupie · affrontez les bots ou vos amis en réseau local	Build your top · take on bots or your friends over LAN
+Atelier	Workshop
+Attaque	Attack
+Au-delà, la toupie qui a le plus d'endurance gagne. Sans limite, la dernière toupie en jeu gagne.	After that, the top with the most stamina wins. With no limit, the last top spinning wins.
+Aucun	None
+Aucun effet, presque aucun recul, esquivable de loin	No effect, almost no knockback, dodgeable from afar
+Aucun lobby détecté pour l'instant	No lobbies found yet
+Aucun lobby nommé « %1 » n'a été détecté sur le réseau.	No lobby named “%1” was found on the network.
+Aucune toupie	No top
+Axe	Axis
+Bas (pilotage, force −)	Down (steering, power −)
+Bastion	Bastion
+Bienvenue dans le tutoriel !\nVotre toupie est à gauche. Visez avec la souris puis cliquez, ou visez avec %1 et %2.	Welcome to the tutorial!\nYour top is on the left. Aim with the mouse and click, or aim with %1 and %2.
+Bille	Ball
+Blesse et bloque dash + coup spécial 6 s	Hurts and blocks dash + special move for 6 s
+Bonus d'attaque pendant un dash.	Attack bonus during a dash.
+Bot	Bot
+Bot %1	Bot %1
+Bots	Bots
+Bouclier	Shield
+Boulon	Bolt
+Boulon Abysse	Abyss Bolt
+Boulon Perçant	Piercing Bolt
+Boulon Polaire	Polar Bolt
+Boulon Spectral	Spectral Bolt
+Boulon Tellurique	Quake Bolt
+Boulon Tempête	Storm Bolt
+Boulon Vampire	Vampire Bolt
+Bouton précédent	Back button
+Bouton souris %1	Mouse button %1
+Bouton suivant	Forward button
+Bravo ! Duel gagné et toupie adverse éjectée : vous connaissez toutes les actions. Appuyez sur Échap pour revenir au menu.	Well done! Duel won and the opposing top knocked out: you know every move now. Press Esc to return to the menu.
+Brise Éternelle	Eternal Breeze
+Bunker-8	Bunker-8
+Béton	Concrete
+C'est le duel par défaut des combats, des parties en réseau et des tournois ; la personnalisation des règles permet d'en choisir un autre.	This is the default duel for battles, LAN games and tournaments; the rules customisation lets you pick another one.
+COMBAT DE TOUPIES	SPINNING TOP BATTLES
+Caldeira	Caldera
+Carapace	Shell
+Catalogue de pièces différent de celui de l'hôte.	Parts catalog differs from the host's.
+Cercle	Circle
+Champion	Champion
+Changer de toupies	Change tops
+Chaque toupie peut lancer son coup spécial une fois par partie, au prix du quart de son endurance du moment.	Each top can use its special move once per game, at the cost of a quarter of its current stamina.
+Choisir l'ordre de mes toupies et jouer…	Choose my top order and play…
+Classement	Standings
+Classique	Classic
+Classique · %1 points	Classic · %1 points
+Clic droit	Right click
+Clic gauche	Left click
+Clic molette	Middle click
+Cliquez sur une case puis appuyez sur une touche ou un bouton de la souris. Échap annule, Retour arrière efface la case. La souris vise toujours pendant la visée, et Échap reste la touche pour quitter.	Click a box, then press a key or mouse button. Esc cancels, Backspace clears the box. The mouse always aims while aiming, and Esc remains the key to quit.
+Colosse	Colossus
+Combat	Battle
+Combat terminé	Battle over
+Combattre !	Fight!
+Commandes et repères	Controls and tips
+Commandes…	Controls…
+Comète	Comet
+Connecté à l'hôte %1.	Connected to host %1.
+Connexion avec l'hôte perdue.	Lost connection to the host.
+Connexion impossible : %1	Could not connect: %1
+Connexion à %1:%2…	Connecting to %1:%2…
+Contre %1 — en attente de votre adversaire…	Vs %1 — waiting for your opponent…
+Contrepoids	Counterweight
+Coup spécial	Special move
+Coup spécial · coûte ¼ de l'endurance	Special move · costs ¼ of stamina
+Coup spécial · utilisé	Special move · used
+Coup spécial — %1	Special move — %1
+Coups spéciaux	Special moves
+Coûte ¼ de l’endurance du moment · une fois par partie	Costs ¼ of current stamina · once per game
+Crampon	Spike
+Cratère aux pentes très raides, sans rebord, entouré de lave. Les chocs et les dashs y sont plus puissants.	Crater with very steep slopes and no rim, surrounded by lava. Hits and dashes are more powerful here.
+Cryo-Ellipse	Cryo-Ellipse
+Création du lobby impossible	Could not create lobby
+Créer le lobby	Create lobby
+Créer le lobby du tournoi	Create tournament lobby
+Créer un lobby	Create a lobby
+Créer un lobby…	Create a lobby…
+Créer un tournoi (lobby des joueurs humains)	Create a tournament (lobby for human players)
+Créer un tournoi…	Create a tournament…
+Ctrl	Ctrl
+Cuvette circulaire en plastique avec rebord. Le stadium de référence, sans avantage pour aucun type.	Round plastic bowl with a rim. The reference stadium, with no advantage for any type.
+Cyclone Furieux	Furious Cyclone
+D	L
+DASH !	DASH!
+DUEL !	DUEL!
+DUEL ! %1 quand le curseur est dans le vert	DUEL! %1 when the cursor is in the green
+Dash	Dash
+Dash / appui en duel	Dash / duel press
+Dash dans %1 s	Dash in %1s
+Dash impossible	Dash unavailable
+Dash prêt	Dash ready
+Dash prêt (%1)	Dash ready (%1)
+De 2 à 4 joueurs humains, chacun sur sa machine, complétés par des bots.	2 to 4 human players, each on their own computer, filled out with bots.
+Demi	Semi
+Demi-finales	Semi-finals
+Dernière élimination : plus d'endurance	Last elimination: out of stamina
+Dernière élimination : éjection hors du stadium	Last elimination: ring-out
+Diff.	Diff.
+Difficile	Hard
+Difficulté	Difficulty
+Direction	Direction
+Direction : souris ou %1 %2  ·  Force : distance ou %3 %4  ·  Lancer : %5	Direction: mouse or %1 %2  ·  Power: distance or %3 %4  ·  Launch: %5
+Distorsion	Distortion
+Donnez un nom à votre toupie.	Give your top a name.
+Droite (pilotage, direction)	Right (steering, direction)
+Duel	Duel
+Duel ! Les toupies restent bloquées l'une contre l'autre. En bas de l'écran, un curseur blanc parcourt votre barre : appuyez sur %1 quand il est dans la zone verte. La zone rétrécit à chaque réussite ; le premier qui rate subit 1,5× les dégâts du dash adverse.\nAppuyez sur %1 pour commencer.	Duel! The tops stay locked against each other. At the bottom of the screen, a white cursor sweeps across your bar: press %1 when it's in the green zone. The zone shrinks with each success; the first to miss takes 1.5× the opponent's dash damage.\nPress %1 to start.
+Duel (rafale)	Duel (rush)
+Duel gagné !	Duel won!
+Duel nul !	Duel tied!
+Duel perdu…	Duel lost…
+Duel à 2 toupies	2-top duel
+Duel — %1	Duel — %1
+Duels	Duels
+Duels : %1	Duels: %1
+Dune Hexa	Hexa Dune
+DÉF %1	DEF %1
+Déconnectée	Disconnected
+Défaite…	Defeat…
+Défense	Defense
+Dégâts	Damage
+Dégâts modérés	Moderate damage
+Dégâts modérés, peu de recul	Moderate damage, little knockback
+Dégâts modérés, éloigne les cibles du bord	Moderate damage, moves targets away from the rim
+Délai de connexion dépassé.	Connection timed out.
+Dôme	Dome
+END %1	STA %1
+Ellipse	Ellipse
+En attente de joueurs (%1/%2)…	Waiting for players (%1/%2)…
+En attente de l'hôte pour revenir au lobby…	Waiting for the host to return to the lobby…
+En attente des autres joueurs (%1/%2)	Waiting for other players (%1/%2)
+Endurance	Stamina
+Endurance %1	Stamina %1
+Endurance de départ de chaque toupie.	Starting stamina of each top.
+Endurance max	Max stamina
+Endurance perdue lors des chocs et des coups spéciaux.	Stamina lost from hits and special moves.
+Enregistrer	Save
+Entrée	Enter
+Entrée (pavé num.)	Enter (keypad)
+Espace	Space
+Exempt	Bye
+Express	Express
+Express · %1 manches	Express · %1 rounds
+Facile	Easy
+Faucon	Falcon
+Fermer le lobby	Close lobby
+Fin de combat et menus	End of battle and menus
+Finale	Final
+Force	Power
+Force %1 %	Power %1%
+Force avec laquelle les toupies sont repoussées.	How hard tops get pushed back.
+Force de la correction de trajectoire aux flèches. 0 = désactivé.	Strength of arrow-key course correction. 0 = off.
+Format	Format
+Forteresse	Fortress
+Fosse Sauvage	Wild Pit
+Gardienne	Guardian
+Gauche (pilotage, direction)	Left (steering, direction)
+Gelée (%1 s)	Frozen (%1s)
+Glace	Ice
+Golem	Golem
+Gomme	Rubber
+Griffe	Claw
+Gros recul : éjecte une cible déjà au bord	Big knockback: knocks out a target already at the edge
+Haut (pilotage, force +)	Up (steering, power +)
+Hexagone	Hexagon
+Hexagone de sable aux rebords très hauts. Le sable ralentit tout et use vite la rotation, mais un dash bien placé frappe très fort.	Sand hexagon with very high rims. Sand slows everything down and wears spin quickly, but a well-placed dash hits very hard.
+Horaire	Clockwise
+Huitièmes de finale	Round of 16
+Hôte	Host
+Il fonce sur vous ! Répondez par un dash avec %1 : quand deux toupies se percutent en plein dash, elles s'affrontent en duel.	It's charging at you! Answer with a dash using %1: when two tops collide mid-dash, they face off in a duel.
+Impossible d'écrire %1 : %2	Could not write %1: %2
+Impossible d'écrire le fichier :\n%1	Can't write the file:\n%1
+Impossible de lancer l'installation.	Could not start the installation.
+Impossible de rejoindre	Could not join
+Impossible de relancer le jeu.	Could not restart the game.
+Impossible de renommer %1.	Could not rename %1.
+Intermédiaire	Core
+J	P
+J%1	D%1
+Je suis prêt	I'm ready
+Jeu en pause	Game paused
+Jouer contre les bots	Play vs bots
+Joueur	Player
+Joueur %1	Player %1
+Joueurs	Players
+Journée %1/%2	Matchday %1/%2
+Juste Milieu	Golden Mean
+L'adversaire est proche : appuyez sur %1 pour dasher. Le dash fonce sur lui avec plus d'attaque, contre un peu d'endurance.	The opponent is close: press %1 to dash. A dash charges at them with extra attack, for a bit of stamina.
+L'hôte a fermé le lobby.	The host closed the lobby.
+L'hôte ne répond pas.	The host is not responding.
+L'installation a échoué :\n%1	The installation failed:\n%1
+La 1re toupie joue la manche 1, la 2e la manche 2, la 3e la manche 3, puis on recommence. Votre adversaire ne voit pas votre ordre.	The 1st top plays round 1, the 2nd round 2, the 3rd round 3, then it starts over. Your opponent can't see your order.
+La longueur de la flèche donne la force du lancer : éloignez ou rapprochez le curseur puis cliquez, ou appuyez sur %1 / %2.	The arrow's length sets the launch power: move the cursor farther or closer and click, or press %1 / %2.
+La mise à jour a échoué :\n%1	The update failed:\n%1
+La version %1 est disponible (vous avez la %2), mais cette installation ne peut pas se mettre à jour seule.\nOuvrir la page de téléchargement ?	Version %1 is available (you have %2), but this installation can't update itself.\nOpen the download page?
+La version %1 est disponible (vous avez la %2).\nLa télécharger et l'installer ? Le jeu redémarrera sur la nouvelle version.	Version %1 is available (you have %2).\nDownload and install it? The game will restart on the new version.
+Lame	Blade
+Lame Cyclone	Cyclone Blade
+Lance d'acier	Steel Lance
+Lancer	Launch
+Lancer la partie	Start game
+Lancer la toupie	Launch the top
+Lancer le tournoi	Start tournament
+Langue	Language
+Le fichier des toupies est illisible et a été ignoré :\n%1	The tops file is unreadable and was ignored:\n%1
+Le jeu redémarre pour changer de langue.	The game restarts to change language.
+Le lobby est complet (%1 joueurs).	The lobby is full (%1 players).
+Le lobby n'a pas pu être créé :\n%1	The lobby could not be created:\n%1
+Le tournoi sauvegardé est illisible ; il a été supprimé.	The saved tournament can't be read; it has been deleted.
+Lente, facile à esquiver	Slow, easy to dodge
+Les annonces UDP n'arrivent pas (pare-feu ?). Pour une détection instantanée, autorisez le port UDP %1 en entrée, par exemple : sudo firewall-cmd --permanent --add-port=%1/udp && sudo firewall-cmd --reload	UDP announcements aren't getting through (firewall?). For instant discovery, allow incoming UDP port %1, for example: sudo firewall-cmd --permanent --add-port=%1/udp && sudo firewall-cmd --reload
+Les plus lourds dégâts (24)	The heaviest damage (24)
+Ligue	League
+Ligue : chacun rencontre chacun une fois, les manches ou points gagnés s'additionnent au classement.\nÉlimination directe : le perdant de chaque match est éliminé.	League: everyone plays everyone once; rounds or points won add up in the standings.\nKnockout: the loser of each match is eliminated.
+Limite %1 s	Limit %1s
+Lobby	Lobby
+Lobby complet. L'hôte lancera la partie quand tout le monde sera prêt.	Lobby full. The host will start the game when everyone is ready.
+Lobby de %1	%1's lobby
+Lobby fermé	Lobby closed
+Lobby « %1 »	Lobby “%1”
+Lobbys détectés sur le réseau :	Lobbies found on the network:
+Maj	Shift
+Manche %1	Round %1
+Manche suivante dans quelques secondes…	Next round in a few seconds…
+Match de tournoi · premier à 2 manches	Tournament match · first to 2 rounds
+Match de tournoi · premier à 4 points	Tournament match · first to 4 points
+Match nul	Draw
+Match perdu	Match lost
+Match remporté !	Match won!
+Menu	Menu
+Mes toupies	My tops
+Mises à jour	Updates
+Modifier les touches…	Change key bindings…
+Modifier…	Edit…
+Multijoueur en réseau local	LAN multiplayer
+Météore	Meteor
+Mêlée à %1	Free-for-all (%1)
+Mêlée à %1 toupies : le dernier en jeu gagne	%1-top free-for-all: last one spinning wins
+Niveau	Level
+Niveau des bots	Bot level
+Nom	Name
+Nom de la toupie	Top name
+Nom du lobby	Lobby name
+Nombre de joueurs	Number of players
+Normal	Normal
+Nouvelle	New
+Noyau	Nucleus
+Noyau Holo	Holo Core
+Nébuleuse	Nebula
+Octogone	Octagon
+Octogone au sol dur et lisse, entouré d'un très haut rebord. Les toupies vont un peu plus vite et les chocs sont plus violents, mais la surface râpe la pointe.	Octagon with a hard, smooth floor and a very high rim. Tops move a little faster and hits are more violent, but the surface grinds down the tip.
+Onde de choc	Shockwave
+Orbite	Orbit
+Ordre de vos toupies	Your top order
+Ou par nom de lobby / adresse IP[:port] :	Or by lobby name / IP address[:port]:
+Ouragan	Hurricane
+Paramètres	Settings
+Parfait. Lancez votre toupie avec %1 (ou %2).	Perfect. Launch your top with %1 (or %2).
+Partez !	Go!
+Participant	Participant
+Participants	Participants
+Partie en réseau local	LAN game
+Partie en réseau local (hôte)	LAN game (host)
+Partie intermédiaire	Core
+Pas de duel : deux toupies qui se percutent en plein dash se repoussent comme lors d'un choc ordinaire.	No duel: two tops that collide mid-dash bounce off like in an ordinary hit.
+Pas prêt	Not ready
+Patinoire elliptique au haut rebord et aux pentes douces. La glace use peu la rotation et les chocs repoussent moins, mais ils frappent plus fort.	Elliptical rink with a high rim and gentle slopes. Ice barely wears down spin and hits cause less knockback, but they hit harder.
+Personnalisation	Custom rules
+Personnalisation (choisie par l'hôte)	Custom rules (set by the host)
+Personnalisation : %1%2	Custom rules: %1%2
+Personnalisation ✱…	Custom rules ✱…
+Personnalisation…	Custom rules…
+Perte naturelle d'endurance au fil du temps.	Natural stamina loss over time.
+Pilotage	Steering
+Pilotage (flèches)	Steering (arrows)
+Pilotage (touches maintenues)	Steering (hold keys)
+Pivot	Pivot
+Place libre — en attente d'un joueur…	Open slot — waiting for a player…
+Plateau	Flat
+Plein écran / fenêtré	Full screen / windowed
+Plus d'endurance	Out of stamina
+Pointe	Tip
+Pointe Fine	Sharp Point
+Polygone	Polygon
+Port UDP %1 indisponible : seule la recherche par balayage est active.	UDP port %1 unavailable: only scan-based search is active.
+Port invalide : « %1 ».	Invalid port: “%1”.
+Portée	Range
+Portée courte	Short range
+Portée très courte	Very short range
+Premier à %1 manches · stadium %2	First to %1 rounds · %2 stadium
+Premier à %1 points · stadium %2	First to %1 points · %2 stadium
+Prisme	Prism
+Préparer le combat	Battle setup
+Prêt	Ready
+Prêt à lancer	Ready to launch
+Prêt — jouer le match	Ready — play the match
+Prêt ✓	Ready ✓
+Pts	Pts
+Puissance des dashs	Dash power
+Quart	Quarter
+Quarts de finale	Quarter-finals
+Quitter	Quit
+Quitter le lobby	Leave lobby
+Quitter le tournoi	Leave tournament
+Quitter le tournoi en réseau ?	Leave the LAN tournament?
+Quitter le tutoriel	Quit tutorial
+Quitter sans sauvegarder	Quit without saving
+Rafale	Rush
+Rafale ! Martelez %1	Rush! Hammer %1
+Raté : le curseur était dans le rouge. Attendez qu'il passe au centre, dans la zone verte, avant d'appuyer. Pour cette fois, l'erreur ne compte pas !\nAppuyez sur %1 pour reprendre.	Missed: the cursor was in the red. Wait for it to reach the center, in the green zone, before pressing. This time the miss doesn't count!\nPress %1 to resume.
+Rebonds	Bounce
+Rebonds après un choc	Bounce after a hit
+Recherche d'une mise à jour…	Checking for updates…
+Recherche de lobbys…	Searching for lobbies…
+Recherche des lobbys sur le réseau local…	Searching for lobbies on the local network…
+Recul	Knockback
+Redémarrer le jeu maintenant pour passer en %1 ?	Restart the game now to switch to %1?
+Rejoindre	Join
+Rejoindre le lobby sélectionné	Join selected lobby
+Rejoindre un lobby	Join a lobby
+Relancez le jeu pour appliquer la langue.\n%1	Restart the game to apply the language.\n%1
+Rempart	Rampart
+Rend 60 % de l’endurance volée	Gives back 60% of the stolen stamina
+Replier	Collapse
+Reprendre le tournoi solo	Resume the solo tournament
+Retour	Back
+Retour au lobby	Back to lobby
+Retour au lobby (%1)	Back to lobby (%1)
+Retour au menu	Back to menu
+Retour au menu / quitter le lobby / abandonner	Back to menu / leave lobby / forfeit
+Revanche (%1)	Rematch (%1)
+Revanche (solo) / retour au lobby (hôte)	Rematch (solo) / back to lobby (host)
+Revanche / retour au lobby	Rematch / back to lobby
+Rien à jouer pour vous dans ce tour : en attente des autres matchs…	Nothing for you to play this round: waiting for the other matches…
+Rotule	Ball Joint
+Roue	Wheel
+Roue métallique	Metal wheel
+Règles normales	Standard rules
+Réglages du lobby	Lobby settings
+Réglages du tournoi	Tournament settings
+Régler tous les bots…	Set all bots…
+Réinitialiser	Reset
+Rétablir les touches par défaut	Restore default keys
+Sable	Sand
+Sabot	Hoof
+Sans coups spéciaux	No special moves
+Sans duel	No duel
+Sans limite de temps	No time limit
+Sans pilotage	No steering
+Sauvegarde impossible	Can't save
+Sauvegarder et quitter	Save and quit
+Sauvegarder le tournoi pour le reprendre plus tard ? Un match en cours sera rejoué depuis le début.	Save the tournament to resume it later? A match in progress will be replayed from the start.
+Score du match : %1 – %2	Match score: %1 – %2
+Secousse qui blesse toutes les toupies très proches et les empêche de dasher ou de lancer leur coup spécial pendant 6 secondes. Portée très courte.	A tremor that hurts all very close tops and stops them from dashing or using their special move for 6 seconds. Very short range.
+Seizièmes de finale	Round of 32
+Siphon	Siphon
+Solo contre 1 à 3 bots	Solo against 1 to 3 bots
+Sonnée : ni dash ni coup spécial (%1 s)	Stunned: no dash or special move (%1s)
+Souffle de givre	Frost Breath
+Spirale	Spiral
+Stadium	Stadium
+Stat la plus élevée : %1 %2	Highest stat: %1 %2
+Statistiques	Stats
+Stats équilibrées : aucune ne domine	Balanced stats: none dominates
+Statut	Status
+Supprimer	Delete
+Supprimer la toupie « %1 » ?	Delete the top “%1”?
+Séisme	Quake
+Série réussie ! En attente de l'adversaire…	Streak complete! Waiting for the opponent…
+TOTAL	TOTAL
+TOUR %1 / %2	ROUND %1 / %2
+Tableau	Bracket
+Temps maximal	Time limit
+Temps écoulé : victoire à l'endurance restante	Time's up: win on remaining stamina
+Terre	Dirt
+Timing	Timing
+Timing : appuyer dans la zone verte. Rafale : tir à la corde, appuyer le plus vite possible. Sans duel : choc ordinaire. Par défaut, celui des paramètres.	Timing: press in the green zone. Rush: tug of war, press as fast as you can. No duel: ordinary hit. By default, the one from the settings.
+Tir à la corde : appuyez le plus vite possible sur %1 pour pousser le curseur vers l'adversaire. Au bout de 3,5 s, le plus avancé gagne ; pile au milieu, match nul.	Tug of war: press %1 as fast as you can to push the marker towards your opponent. After 3.5 s, whoever is ahead wins; dead centre is a draw.
+Tirée au hasard	Random pick
+Titan	Titan
+Tonnerre	Thunder
+Touches et souris	Keys and mouse
+Toupie	Top
+Toupie %1	Top %1
+Toupie d'entraînement	Training top
+Toupies sauvegardées	Saved tops
+Tournoi	Tournament
+Tournoi en réseau local	LAN tournament
+Tournoi illisible	Unreadable tournament
+Tournoi solo	Solo tournament
+Tournoi terminé	Tournament over
+Tournoi terminé : vous êtes champion·ne !	Tournament over: you are the champion!
+Tournoi terminé — champion·ne : %1	Tournament over — champion: %1
+Tournoi · %1	Tournament · %1
+Tournois	Tournaments
+Tours et résultats	Rounds and results
+Tous : %1	All: %1
+Tous les coups spéciaux	All special moves
+Tous les joueurs doivent choisir une toupie et se déclarer prêts.	All players must pick a top and mark themselves ready.
+Tout le monde est prêt : vous pouvez lancer la partie !	Everyone is ready: you can start the game!
+Trait fin qui inflige les plus lourds dégâts à une cible, sans autre effet. Presque aucun recul, et assez lent pour être esquivé de loin.	A thin bolt that deals the heaviest damage to one target, with no other effect. Almost no knockback, and slow enough to dodge from afar.
+Trois toupies jouées dans l'ordre choisi avant chaque match ; premier à 4 points (arrêt de la toupie adverse : 1 pt, éjection : 2 pts).	Three tops played in the order chosen before each match; first to 4 points (opponent's top stops: 1 pt, ring-out: 2 pts).
+Turbine	Turbine
+Tutoriel	Tutorial
+Type	Type
+Type de match	Match type
+Type obtenu	Resulting type
+Téléchargement de la version %1…	Downloading version %1…
+Téléporte la cible près du bord, lancée vers l’extérieur	Teleports the target near the edge, flung outwards
+Une partie est déjà en cours dans ce lobby.	A game is already in progress in this lobby.
+Une toupie pour tout le tournoi ; le premier à gagner 2 manches remporte le match.	One top for the whole tournament; the first to win 2 rounds wins the match.
+Usure	Wear
+V	W
+VOUS	YOU
+Vague	Wave
+Vague = projectile qui file vers l’adversaire le plus proche (esquivable). Anneau = onde qui s’élargit autour du lanceur.	Wave = projectile that flies towards the nearest opponent (dodgeable). Ring = wave that widens around the caster.
+Vague glacée : pendant 3 secondes, la cible est fortement ralentie, ne peut plus piloter et le froid use sa rotation trois fois plus vite. Dégâts modérés.	An icy wave: for 3 seconds, the target is heavily slowed, can't steer, and the cold wears down its spin three times faster. Moderate damage.
+Vague lente qui blesse la cible et la téléporte près du bord du stadium, lancée vers l'extérieur : elle risque l'éjection. Facile à esquiver de loin.	A slow wave that hurts the target and teleports it near the edge of the stadium, flung outward: it risks a ring-out. Easy to dodge from afar.
+Vague qui vole l'endurance de la cible : la toupie récupère 60 % de ce qu'elle inflige. Dégâts modérés, recul faible.	A wave that steals the target's stamina: the top recovers 60% of the damage it deals. Moderate damage, low knockback.
+Valider et jouer	Confirm and play
+Version du jeu incompatible avec celle de l'hôte.	Game version incompatible with the host's.
+Victoire !	Victory!
+Victoires %1  ·  Défaites %2  ·  Nuls %3	Wins %1  ·  Losses %2  ·  Draws %3
+Vise…	Aiming…
+Visée	Aim
+Vitesse	Speed
+Vitesse de déplacement : lancer, propulsion, dashs.	Movement speed: launch, propulsion, dashes.
+Volcan	Volcano
+Vortex	Vortex
+Vos toupies et le stadium	Your tops and the stadium
+Votre coup spécial (donné par le boulon) se lance avec %1. Une seule fois par partie : il coûte un quart de l'endurance du moment, et son effet compte autant que ses dégâts : lancez-le au bon moment. Essayez-le !	Your special move (granted by the bolt) is used with %1. Only once per game: it costs a quarter of your current stamina, and its effect matters as much as its damage, so time it well. Try it!
+Votre match	Your match
+Votre pseudo	Your nickname
+Votre toupie	Your top
+Votre toupie (parmi vos toupies locales)	Your top (from your local tops)
+Votre toupie avance seule, dans le sens inverse de sa rotation, et revient vers le centre. Maintenez %1, %2, %3 ou %4 pour la piloter légèrement.	Your top moves on its own, opposite to its spin, and drifts back toward the center. Hold %1, %2, %3 or %4 to steer it slightly.
+Vous	You
+Vous avez la dernière version (%1).	You have the latest version (%1).
+Vous contre des bots : ligue ou élimination directe, de 4 à 32 participants.	You vs bots: league or knockout, 4 to 32 participants.
+Vous suivez le tournoi.	You are following the tournament.
+Vous êtes l'hôte. Les autres joueurs peuvent rejoindre « %1 » depuis la liste des lobbys ou se connecter à : %2	You are the host. Other players can join “%1” from the lobby list or connect to: %2
+Vous êtes éliminé·e. La suite du tournoi se joue sans vous.	You have been eliminated. The rest of the tournament goes on without you.
+Zéphyr	Zephyr
+anneau	ring
+aucun	none
+aucun modificateur	no modifiers
+aucune touche	no key
+distance du curseur (flèche plus ou moins longue), ou %1 et %2	cursor distance (longer or shorter arrow), or %1 and %2
+dégâts	damage
+désactivé	off
+ex. « Lobby de Léa » ou 192.168.1.20:%1	e.g. “Léa's lobby” or 192.168.1.20:%1
+exempt	bye
+frottement	friction
+pente	slope
+petit	small
+portée du dash	dash range
+puissance du dash	dash power
+rebord	rim
+rebord bas	low rim
+rebord haut	high rim
+recul	knockback
+sans rebord	no rim
+souris, ou %1 et %2	mouse, or %1 and %2
+usure	wear
+vague	wave
+vitesse	speed
+vous	you
+« %1 » enregistrée (type %2).	“%1” saved (type %2).
+« %1 » est le nom d'une toupie pré-assemblée.	“%1” is the name of a preset top.
+« %1 » mise à jour.	“%1” updated.
+« %1 » servait à « %2 » : elle a été retirée de cette action.	“%1” was bound to “%2”: it has been removed from that action.
+« %1 » supprimée.	“%1” deleted.
+À déterminer	To be decided
+À jouer	To play
+À l'arrêt	Stopped
+Échap	Esc
+Éclipse	Eclipse
+Éjection hors du stadium	Ring-out
+Éjectée	Knocked out
+Élimination directe	Knockout
+Équilibre	Balance
+Établi	Workbench
+Éternelle	Eternal
+—	—
+‹ › ou molette : pièce précédente / suivante · clic : toutes les pièces	‹ › or mouse wheel: previous / next part · click: every part
+▲ Monter	▲ Move up
+▼ Descendre	▼ Move down
