@@ -32,7 +32,8 @@ Prérequis sur l'ordinateur : Java 17 ou plus récent et `curl`/`unzip` (le rest
    ```
 
    Le script compile l'APK de débogage, l'installe et lance le jeu. Il explique quoi faire si le
-   téléphone n'est pas détecté ou pas encore autorisé. L'APK seul se trouve ensuite dans
+   téléphone n'est pas détecté ou pas encore autorisé. Un téléphone branché passe avant un
+   émulateur ; avec plusieurs téléphones, choisissez avec `ANDROID_SERIAL=<numéro>` (voir `adb devices`). L'APK seul se trouve ensuite dans
    `app/build/outputs/apk/debug/app-debug.apk`.
 
 Pour le multijoueur, le téléphone doit être sur le même Wi-Fi que les autres joueurs.
