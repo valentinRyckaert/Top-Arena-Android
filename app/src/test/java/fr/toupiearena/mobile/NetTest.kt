@@ -1,6 +1,8 @@
 package fr.toupiearena.mobile
 
 import fr.toupiearena.mobile.core.PartCatalog
+import fr.toupiearena.mobile.game.Duel
+import fr.toupiearena.mobile.game.Spinner
 import fr.toupiearena.mobile.net.ClientSession
 import fr.toupiearena.mobile.net.HostSession
 import fr.toupiearena.mobile.net.LobbyBrowser
@@ -8,6 +10,7 @@ import fr.toupiearena.mobile.net.LobbyClient
 import fr.toupiearena.mobile.net.LobbyServer
 import fr.toupiearena.mobile.net.MatchCodec
 import fr.toupiearena.mobile.session.MatchPhase
+import fr.toupiearena.mobile.session.MatchState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -81,6 +84,22 @@ class NetTest {
             guest.state.phase == MatchPhase.Fighting || guest.state.phase == MatchPhase.Finished
         }
         onMain { server.close() }
+    }
+
+    @Test fun rushDuelSurvivesCodec() {
+        // Rafale : appuis de chaque camp et durée du duel transmis comme sur PC (protocole 4).
+        val source = MatchState()
+        source.spinners = listOf(Spinner(PartCatalog.presets[0]), Spinner(PartCatalog.presets[1]))
+        source.duel = Duel(active = true, first = 0, second = 1, elapsed = 1.25)
+        source.duel.sides[0].presses = 9
+        source.duel.sides[1].presses = 4
+        val encoded = MatchCodec.encodeState(source, emptyList())
+        assertEquals(10, encoded.getJSONArray("d").length())
+        val target = MatchState()
+        target.spinners = source.spinners
+        assertTrue(MatchCodec.decodeState(JSONObject(encoded.toString()), target, null))
+        assertEquals(5, target.duel.rope())
+        assertEquals(1.25, target.duel.elapsed, 1e-9)
     }
 
     @Test fun lobbyIsDiscoveredAndAnswersQueries() = runBlocking {
