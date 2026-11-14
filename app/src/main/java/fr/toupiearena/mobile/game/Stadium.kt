@@ -6,6 +6,7 @@ import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 /**
  * Forme d'un stadium centrée sur l'origine. level(p) vaut 0 au centre et 1 sur
@@ -75,6 +76,10 @@ data class Stadium(
     val id: String,
     val name: String,
     val description: String,
+    /** Nom de code affiché sous le nom (« Noyau Holo »…). */
+    val codename: String = "",
+    /** Couleur signature (0xRRGGBB) de l'interface. */
+    val accent: Long = 0x34d6ff,
     val shape: StadiumGeometry.Kind = StadiumGeometry.Kind.Circle,
     val sides: Int = 8,
     val aspect: Double = 1.0,
@@ -102,6 +107,7 @@ data class Stadium(
         orbitPerAttack = base.orbitPerAttack * speed,
         passiveBase = base.passiveBase * enduranceDrain,
         damageBase = base.damageBase * damage,
+        rimDamage = base.rimDamage * damage,
         knockbackBase = base.knockbackBase * knockback,
         knockbackPerAttack = base.knockbackPerAttack * knockback,
         knockbackPerAttackerDefense = base.knockbackPerAttackerDefense * knockback,
@@ -113,36 +119,47 @@ data class Stadium(
     fun geometry(applied: BattleConfig) = StadiumGeometry(shape, applied.stadiumRadius, sides, aspect)
 
     companion object {
+        /** Échelle d'un polygone régulier (rayon circonscrit 1) pour qu'il ait la surface du cercle de rayon 1 du stadium classique. */
+        private fun sameAreaAsCircle(sides: Int) = sqrt(PI / (sides / 2.0 * sin(2.0 * PI / sides)))
+
         val all: List<Stadium> = listOf(
             Stadium("classique", "Classique",
-                "Cuvette circulaire en plastique avec rebord. Le stadium de référence, sans avantage pour aucun type."),
+                "Cuvette circulaire en plastique avec rebord. Le stadium de référence, sans avantage pour aucun type.",
+                codename = "Noyau Holo", accent = 0x34d6ff),
             Stadium("beton", "Béton",
                 "Octogone au sol dur et lisse, entouré d'un très haut rebord. Les toupies vont un peu plus vite et " +
                     "les chocs sont plus violents, mais la surface râpe la pointe.",
-                shape = StadiumGeometry.Kind.Polygon, sides = 8, rimHeight = 2.0, friction = 0.85, speed = 1.05,
+                codename = "Bunker-8", accent = 0x3dff8b,
+                shape = StadiumGeometry.Kind.Polygon, sides = 8, size = sameAreaAsCircle(8), rimHeight = 2.0, friction = 0.85, speed = 1.05,
                 damage = 1.1, knockback = 0.9, enduranceDrain = 1.1,
                 floorCenter = 0xc4c6c9, floorEdge = 0x73777c, rimColor = 0x3d4045),
             Stadium("terre", "Terre",
                 "Arène de terre battue sans rebord. Le sol accroche la pointe : la rotation s'use plus vite et les " +
                     "chocs frappent fort ; les dashs sont un peu plus courts.",
+                codename = "Fosse Sauvage", accent = 0xb8ff2e,
                 hasRim = false, dashSpeed = 0.95, damage = 1.4, enduranceDrain = 1.2,
                 floorCenter = 0xc39663, floorEdge = 0x6e4b2a, rimColor = 0x2b1b0e),
             Stadium("glace", "Glace",
                 "Patinoire elliptique au haut rebord et aux pentes douces. La glace use peu la rotation et les chocs " +
                     "repoussent moins, mais ils frappent plus fort.",
-                shape = StadiumGeometry.Kind.Ellipse, aspect = 0.8, rimHeight = 1.87, friction = 0.99, slope = 0.75,
+                codename = "Cryo-Ellipse", accent = 0x8ff3ff,
+                shape = StadiumGeometry.Kind.Ellipse, aspect = 0.8,
+                size = 1.0 / sqrt(0.8), // Surface du cercle classique.
+                rimHeight = 1.87, friction = 0.99, slope = 0.75,
                 enduranceDrain = 0.75, knockback = 0.83, damage = 1.19, speed = 1.05, dashPower = 1.1,
                 floorCenter = 0xf1f8ff, floorEdge = 0x92badb, rimColor = 0x4d6f8c),
             Stadium("sable", "Sable",
                 "Hexagone de sable aux rebords très hauts. Le sable ralentit tout et use vite la rotation, mais un " +
                     "dash bien placé frappe très fort.",
-                shape = StadiumGeometry.Kind.Polygon, sides = 6, rimHeight = 1.5, friction = 1.3, speed = 0.9,
+                codename = "Dune Hexa", accent = 0xffc23d,
+                shape = StadiumGeometry.Kind.Polygon, sides = 6, size = sameAreaAsCircle(6), rimHeight = 1.5, friction = 1.3, speed = 0.9,
                 enduranceDrain = 1.3, damage = 1.3, dashSpeed = 0.9, dashPower = 2.0,
                 floorCenter = 0xf2dca4, floorEdge = 0xb89455, rimColor = 0x7a5c2c),
             Stadium("volcan", "Volcan",
-                "Petit cratère aux pentes très raides, sans rebord, entouré de lave. Les chocs et les dashs y sont " +
+                "Cratère aux pentes très raides, sans rebord, entouré de lave. Les chocs et les dashs y sont " +
                     "plus puissants.",
-                size = 0.85, knockback = 0.89, hasRim = false, slope = 1.82, damage = 1.14, dashPower = 1.2,
+                codename = "Caldeira", accent = 0xff6a3d,
+                knockback = 0.89, hasRim = false, slope = 1.82, damage = 1.14, dashPower = 1.2,
                 enduranceDrain = 1.1, friction = 1.01, speed = 1.05,
                 floorCenter = 0x6a4741, floorEdge = 0x2a1512, rimColor = 0xff5a1f),
         )

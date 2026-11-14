@@ -6,6 +6,7 @@ import fr.toupiearena.mobile.core.TopType
 import fr.toupiearena.mobile.core.classify
 import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.exp
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
@@ -32,6 +33,10 @@ data class Spinner(
     var slowTimer: Double = 0.0,
     var slowStrength: Double = 0.0,
     var disarmTimer: Double = 0.0,
+    /** > 0 : aspirée vers le centre (coup spécial « vortex »). */
+    var pullTimer: Double = 0.0,
+    /** Vitesse d'aspiration = pullRate × distance au centre. */
+    var pullRate: Double = 0.0,
     var status: Status = Status.Waiting,
 ) {
     /** L'ordre des valeurs compte : il est transmis en réseau. */
@@ -43,6 +48,7 @@ data class Spinner(
     val isBoosted get() = boostTimer > 0.0
     val isSlowed get() = slowTimer > 0.0
     val isDisarmed get() = disarmTimer > 0.0
+    val isPulled get() = pullTimer > 0.0
 }
 
 /** Vague d'un coup spécial en cours de propagation. */
@@ -69,6 +75,7 @@ data class Projectile(
 data class ImpactEvent(
     val point: Vec2,
     val intensity: Double,
+    /** -1 : choc contre le rebord. */
     val first: Int = 0,
     val second: Int = 1,
     val special: Boolean = false,
@@ -88,6 +95,8 @@ data class DuelSide(
     var streak: Int = 0,
     var idle: Double = 0.0,
     var done: Boolean = false,
+    /** Rafale : appuis depuis le début du duel. */
+    var presses: Int = 0,
 ) {
     /** Aller-retour sur la barre. */
     fun advance(h: Double) {
@@ -107,8 +116,13 @@ data class Duel(
     var point: Vec2 = Vec2.ZERO,
     var normal: Vec2 = Vec2.ZERO,
     var approach: Double = 0.0,
+    /** Secondes depuis le début du duel. */
+    var elapsed: Double = 0.0,
     val sides: Array<DuelSide> = arrayOf(DuelSide(), DuelSide()),
 ) {
+    /** Rafale : avance de `first` en appuis (> 0 : le curseur est chez `second`). */
+    fun rope() = sides[0].presses - sides[1].presses
+
     /** 0 ou 1 pour un duelliste, -1 sinon. */
     fun sideOf(spinner: Int) = when {
         !active -> -1
@@ -203,7 +217,7 @@ class Battle(
     fun canDash(index: Int): Boolean {
         if (index !in spinners.indices) return false
         val s = spinners[index]
-        return phase == Phase.Running && s.isActive && !s.isDashing && !s.isDisarmed && !inDuel(index) &&
+        return phase == Phase.Running && s.isActive && !s.isDashing && !s.isDisarmed && !s.isPulled && !inDuel(index) &&
             s.dashCooldown <= 0.0 && s.spin > config.dashCost && nearestOpponent(index) >= 0
     }
 
@@ -377,6 +391,14 @@ class Battle(
             return
         }
         if (outward > 0.0) s.velocity -= normal * (outward * (1.0 + config.rimRestitution))
+        if (outward > config.rimDamageThreshold) {
+            // Percuter le rebord use un peu la rotation (la défense amortit le choc).
+            val mitigation = max(config.minReduction, 1.0 - config.damagePerDefense * s.stats.defense)
+            val loss = config.rimDamage * outward * mitigation * stability(s)
+            s.spin -= loss
+            // Choc contre le rebord, sans adversaire.
+            impacts += ImpactEvent(s.position + normal * config.topRadius, min(1.0, loss / 2.0), -1, -1)
+        }
         s.position = geometry.projectInside(s.position, config.topRadius)
     }
 
@@ -389,6 +411,11 @@ class Battle(
                 s.dashTimer = 0.0
                 s.velocity = s.dashDirection * config.postDashSpeed
             }
+        } else if (s.isPulled) {
+            // Aspirée (vortex) : sa vitesse converge vers celle qui la ramène au centre,
+            // rapide de loin, nulle au centre ; ni propulsion ni pilotage ne s'y opposent.
+            val target = s.position * -s.pullRate
+            s.velocity += (target - s.velocity) * (1.0 - exp(-config.pullGrip * h))
         } else {
             val control = if (s.isSlowed) 1.0 - s.slowStrength else 1.0
             // Pente de la cuvette : ramène vers le centre.
@@ -420,6 +447,11 @@ class Battle(
         s.boostTimer = max(0.0, s.boostTimer - h)
         s.slowTimer = max(0.0, s.slowTimer - h)
         s.disarmTimer = max(0.0, s.disarmTimer - h)
+        if (s.isPulled) {
+            s.pullTimer = max(0.0, s.pullTimer - h)
+            // Fin de l'aspiration : juste de quoi glisser jusqu'au centre.
+            if (!s.isPulled) s.velocity = -s.position * config.friction
+        }
     }
 
     private fun resolveCollision(i: Int, j: Int) {
@@ -462,7 +494,7 @@ class Battle(
         if (pairCooldowns[cooldownIndex] > 0.0) return // Contact prolongé : un seul choc.
 
         val approach = max(0.0, closing)
-        if (a.isDashing && b.isDashing && !duel.active) {
+        if (a.isDashing && b.isDashing && !duel.active && config.duelMode != DuelMode.None) {
             startDuel(i, j, n, approach)
             return
         }
@@ -551,34 +583,37 @@ class Battle(
         val damage = move.damage * config.specialDamageScale * mitigation * stability(t)
         t.spin -= damage
         val direction = if (p.ring) (t.position - p.origin).normalized() else p.direction
+        // Le choc stoppe l'élan de la cible vers le lanceur, dash compris : un dash en cours
+        // réimposait sa vitesse à chaque pas et effaçait le recul.
+        t.dashTimer = 0.0
+        val approach = t.velocity.dot(direction)
+        if (approach < 0.0) t.velocity -= direction * approach
         val resistance = max(config.minReduction, 1.0 - config.knockbackPerDefense * t.stats.defense)
         t.velocity += direction * (move.knockback * config.specialKnockbackScale * resistance * stability(t))
 
         when (move.effect) {
             SpecialMove.Effect.None -> Unit
             SpecialMove.Effect.PullToCenter -> {
-                t.velocity = (-t.position).normalized() * move.effectStrength
-                t.dashTimer = 0.0
+                // Aspiration pendant effectDuration : la distance au centre décroît
+                // exponentiellement (taux effectStrength), sans jamais le dépasser.
+                t.pullTimer = move.effectDuration
+                t.pullRate = move.effectStrength
+                t.velocity = -t.position * move.effectStrength
             }
             SpecialMove.Effect.Slow -> {
                 t.slowTimer = move.effectDuration
                 t.slowStrength = move.effectStrength
-                t.dashTimer = 0.0
             }
             SpecialMove.Effect.Teleport -> {
                 val dir = Vec2.fromAngle(rng.nextDouble(0.0, 2.0 * PI))
                 val level = max(1e-6, geometry.level(dir))
                 t.position = dir * (move.effectStrength / level)
                 t.velocity = dir * (move.knockback * config.specialKnockbackScale)
-                t.dashTimer = 0.0
                 t.escaping = false
             }
             SpecialMove.Effect.Drain ->
                 if (owner.isActive) owner.spin = min(owner.maxSpin, owner.spin + damage * move.effectStrength)
-            SpecialMove.Effect.Disarm -> {
-                t.disarmTimer = move.effectDuration
-                t.dashTimer = 0.0
-            }
+            SpecialMove.Effect.Disarm -> t.disarmTimer = move.effectDuration
         }
         t.lastHitBy = p.owner
         t.lastHitTime = elapsed
@@ -594,9 +629,10 @@ class Battle(
         duel.normal = normal
         duel.point = spinners[i].position + normal * config.topRadius
         duel.approach = approach
+        duel.elapsed = 0.0
         for (side in duel.sides) {
             side.cursor = -1.0; side.direction = 1.0; side.speed = config.duelCursorSpeed
-            side.zone = config.duelZoneStart; side.streak = 0; side.idle = 0.0; side.done = false
+            side.zone = config.duelZoneStart; side.streak = 0; side.idle = 0.0; side.done = false; side.presses = 0
         }
         for (index in intArrayOf(i, j)) {
             val s = spinners[index]
@@ -610,6 +646,17 @@ class Battle(
 
     private fun updateDuel(h: Double) {
         if (!duel.active) return
+        duel.elapsed += h
+        if (config.duelMode == DuelMode.Rush) {
+            for (index in intArrayOf(duel.first, duel.second)) { // Tournent sur place sans s'user.
+                val s = spinners[index]
+                s.angle = (s.angle + s.spinSign * (6.0 + 30.0 * s.spinRatio) * h) % (2.0 * PI)
+            }
+            val rope = duel.rope()
+            if (abs(rope) >= config.rushLimit || duel.elapsed >= config.rushDuration)
+                resolveDuel(if (rope == 0) -1 else if (rope > 0) 1 else 0) // Pile au milieu : nul.
+            return
+        }
         val timedOut = BooleanArray(2)
         for (k in 0..1) {
             val side = duel.sides[k]
@@ -631,6 +678,10 @@ class Battle(
         if (k < 0 || phase != Phase.Running || duel.sides[k].done) return false
         val side = duel.sides[k]
         side.idle = 0.0
+        if (config.duelMode == DuelMode.Rush) {
+            side.presses++ // La fin est décidée par updateDuel (durée ou avance décisive).
+            return true
+        }
         if (abs(cursor.coerceIn(-1.0, 1.0)) > side.zone) {
             resolveDuel(k)
             return true

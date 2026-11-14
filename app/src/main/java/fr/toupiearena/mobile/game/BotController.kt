@@ -21,12 +21,15 @@ class BotController(val index: Int, val difficulty: Difficulty, seed: Long = Sys
         val reaction: Double, val aimError: Double, val dodgeWaves: Double, val rangeFactor: Double,
         val hesitate: Double, val tactics: Boolean, val combos: Boolean, val anticipate: Boolean,
         val duelTiming: Double,
+        /** Duel en rafale : appuis par seconde. */
+        val rushRate: Double,
     )
 
+    // Rafale : un humain appuie 6 à 9 fois par seconde ; le bot difficile est dans le haut.
     private val skill = when (difficulty) {
-        Difficulty.Easy -> Skill(0.45, 0.5, 0.2, 1.3, 0.15, false, false, false, 0.075)
-        Difficulty.Normal -> Skill(0.25, 0.2, 0.6, 0.9, 0.0, false, false, false, 0.045)
-        Difficulty.Hard -> Skill(0.12, 0.07, 0.8, 0.9, 0.0, true, true, true, 0.025)
+        Difficulty.Easy -> Skill(0.45, 0.5, 0.2, 1.3, 0.15, false, false, false, 0.075, 5.5)
+        Difficulty.Normal -> Skill(0.25, 0.2, 0.6, 0.9, 0.0, false, false, false, 0.045, 7.0)
+        Difficulty.Hard -> Skill(0.12, 0.07, 0.8, 0.9, 0.0, true, true, true, 0.025, 8.5)
     }
     private val rng = java.util.Random(seed)
     var plan = Plan.Hold
@@ -34,6 +37,7 @@ class BotController(val index: Int, val difficulty: Difficulty, seed: Long = Sys
     var specialsAllowed = true
     private var decisionTimer = 0.0
     private var steerTimer = 0.0
+    private var rushTimer = 0.0
     private val ignoredThreats = mutableListOf<Int>()
     private val seenThreats = mutableListOf<Int>()
 
@@ -135,6 +139,15 @@ class BotController(val index: Int, val difficulty: Difficulty, seed: Long = Sys
         // Duel : appuyer quand le curseur passe au centre, avec une erreur de timing selon le niveau.
         val side = battle.duel.sideOf(index)
         if (side >= 0) {
+            if (battle.config.duelMode == DuelMode.Rush) {
+                // Rafale : appuis à la cadence du niveau, un peu irréguliers.
+                rushTimer -= dt
+                if (rushTimer <= 0.0) {
+                    rushTimer += (0.75 + rng.nextDouble() * 0.5) / skill.rushRate
+                    battle.duelPress(index, 0.0)
+                }
+                return
+            }
             val bar = battle.duel.sides[side]
             val next = bar.cursor + bar.direction * bar.speed * dt
             if (!bar.done && (bar.cursor < 0.0) != (next < 0.0))
@@ -150,7 +163,10 @@ class BotController(val index: Int, val difficulty: Difficulty, seed: Long = Sys
             battle.setSteering(index, chooseSteering(battle, target))
         }
 
-        // Contre-dash réflexe : répondre à un dash adverse provoque un duel.
+        rushTimer = 0.0 // Premier appui dès le début du prochain duel.
+
+        // Contre-dash réflexe : répondre à un dash adverse provoque un duel (où un bon timing ou une
+        // bonne cadence font la différence) ; sans duel, il évite d'encaisser un dash sans répondre.
         if (skill.tactics && battle.canDash(index)) {
             val self = battle.spinner(index)
             for (j in battle.spinners.indices) {

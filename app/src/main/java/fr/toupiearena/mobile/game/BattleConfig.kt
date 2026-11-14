@@ -1,5 +1,15 @@
 package fr.toupiearena.mobile.game
 
+/** Duel entre deux toupies qui se percutent en plein dash. L'ordre des valeurs compte : il est transmis en réseau. */
+enum class DuelMode(val label: String) {
+    /** Appuyer quand le curseur traverse la zone verte (zone de plus en plus étroite). */
+    Timing("Timing"),
+    /** Rafale : tir à la corde, chaque appui pousse le curseur vers l'adversaire. */
+    Rush("Rafale"),
+    /** Pas de duel : choc ordinaire. */
+    None("Sans duel"),
+}
+
 /**
  * Constantes de gameplay, identiques à la version PC (réglées avec son simulateur
  * d'équilibrage). Distances en rayons de stadium, durées en secondes, endurance
@@ -13,6 +23,13 @@ data class BattleConfig(
     var launchSpeed: Double = 1.0,
     var rimEscapeSpeed: Double = 0.4223,
     var rimRestitution: Double = 0.4,
+    /**
+     * Rebond contre le rebord : perte d'endurance = rimDamage × vitesse vers le rebord,
+     * réduite par la défense comme un choc. En dessous de rimDamageThreshold (toupie qui
+     * longe le bord), rien n'est perdu.
+     */
+    var rimDamage: Double = 4.0,
+    var rimDamageThreshold: Double = 0.08,
     // --- Mouvement
     var slopeStrength: Double = 1.3,
     var friction: Double = 0.7,
@@ -59,10 +76,17 @@ data class BattleConfig(
     var specialCost: Double = 0.25,
     var specialDamageScale: Double = 1.0,
     var specialKnockbackScale: Double = 1.0,
+    /** Toupie aspirée (vortex) : rapidité (1/s) avec laquelle sa vitesse rejoint celle de l'aspiration. */
+    var pullGrip: Double = 12.0,
     /** Toupie gelée : perte passive × (1 + slowWear × intensité du gel). */
     var slowWear: Double = 2.0,
     var specialsEnabled: Boolean = true,
     // --- Duel (deux toupies qui se percutent en plein dash)
+    var duelMode: DuelMode = DuelMode.Timing,
+    /** Rafale : durée du duel, et avance (en appuis) qui le gagne aussitôt. */
+    var rushDuration: Double = 3.5,
+    var rushLimit: Int = 12,
+    // Timing :
     var duelZoneStart: Double = 0.45,
     var duelZoneMin: Double = 0.14,
     var duelZoneShrink: Double = 0.72,

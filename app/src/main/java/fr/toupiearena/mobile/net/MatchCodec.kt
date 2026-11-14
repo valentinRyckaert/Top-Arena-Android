@@ -92,8 +92,9 @@ object MatchCodec {
                 .forEach { duel.put(it) }
             for (side in d.sides) {
                 duel.put(JSONArray(listOf(r(side.cursor), side.direction, r(side.speed), r(side.zone), side.streak,
-                    if (side.done) 1 else 0, r(side.idle))))
+                    if (side.done) 1 else 0, r(side.idle), side.presses)))
             }
+            duel.put(r(d.elapsed))
         }
         return JSONObject().put("type", Msg.State).put("ph", state.phase.ordinal).put("cd", r(state.countdown))
             .put("el", r(state.elapsed)).put("aim", JSONArray(state.aimed)).put("w", state.winner)
@@ -157,7 +158,9 @@ object MatchCodec {
                 side.streak = a.optInt(4)
                 side.done = a.optInt(5) != 0
                 side.idle = a.optDouble(6)
+                side.presses = a.optInt(7)
             }
+            duel.elapsed = d.optDouble(9, 0.0)
         }
         state.duel = duel
 
