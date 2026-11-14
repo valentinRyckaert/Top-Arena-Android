@@ -316,5 +316,177 @@ function movesBoard() {
       { title: 'Vortex', draw: d => movesScreen(d, 'vortex'), notes: ['La fiche change sans quitter la page', 'Anneau : touche tout le monde autour du lanceur'] }]);
 }
 
-if (require.main === module) for (const b of [principles, components, menuBoard, setupBoard, builderBoard, movesBoard]) b().save(OUT);
-module.exports = { principles, components, menuBoard, setupBoard, builderBoard, movesBoard };
+
+// ============================== M06 COMBAT ==============================
+const ARENA = { cx: PW / 2, cy: PH / 2 + 4, R: 178 };
+const at = (u, v) => [ARENA.cx + u * ARENA.R, ARENA.cy + v * ARENA.R];
+function arena(d, key = 'classique') { return g('Arène', [circle(ARENA.cx, ARENA.cy, ARENA.R * 1.12, { fill: STADCOL(key), opacity: 0.12, filter: d.blur(30) }), Ar.stadium(d, key, ARENA.cx, ARENA.cy, ARENA.R)]); }
+const STADCOL = key => U.STAD[key].color;
+function tag(x, y, txt, col) {
+  const w = tw(txt, 10, true, 1.2) + 16;
+  return g(`Étiquette ${txt}`, [path(skew(x - w / 2, y - 16, w, 16, 5), { fill: col }), path(`M${x - 4},${y} l4,5 l4,-5 Z`, { fill: col }), D(x, y - 4.5, txt, { size: 10, ls: 1.2, fill: '#03140A', anchor: 'middle' })]);
+}
+function spinner(d, u, v, p, o = {}) {
+  const [x, y] = at(u, v), out = [];
+  if (o.trail) out.push(path(`M${x + o.trail[0]},${y + o.trail[1]} Q${x + o.trail[0] * 0.4},${y + o.trail[1] * 0.6} ${x},${y}`, { fill: 'none', stroke: o.col || C.green, 'stroke-width': 7, opacity: 0.35, 'stroke-linecap': 'round', filter: d.blur(2) }));
+  out.push(Ar.top(d, x, y, o.R || 20, p, { angle: o.angle ?? 0.5, aura: o.aura }));
+  if (o.tag) out.push(tag(x, y - (o.R || 20) - 6, o.tag, o.col || C.green));
+  if (o.out) out.push(circle(x, y, (o.R || 20) + 4, { fill: '#000', opacity: 0.55 }));
+  return g(`Toupie ${p.name}`, out);
+}
+function hudCard(d, x, y, w, who, p, pct, o = {}) {
+  const col = o.col || C.green, h = o.h || 74, out = [U.card(d, x, y, w, h, { selected: o.me, accent: col, fill: '#0D0B2E' })];
+  out.push(Ar.top(d, x + 22, y + 24, 14, p, { shadow: false, angle: 0.5 }));
+  if (!o.out) out.push(D(x + 44, y + 22, who.toUpperCase(), { size: 12.5, ls: 1.2, fill: col }), T(x + 44, y + 37, o.sub || p.name, { size: 11, fill: C.muted }));
+  if (!o.out) out.push(D(x + w - 10, y + 26, String(pct), { size: 18, anchor: 'end' }));
+  out.push(U.endurance(d, x + 10, y + 46, w - 20, o.out ? 0 : pct, pct < 30 ? C.danger : C.green, { h: 8, color2: pct < 30 ? C.warn : undefined }));
+  if (h > 64) out.push(T(x + 10, y + h - 7, o.status || '', { size: 11, fill: o.statusCol || C.muted }));
+  if (o.out) out.push(rect(x, y, w, h, { fill: '#05040F', opacity: 0.45 }), D(x + 44, y + 22, `${who} · ${o.out}`.toUpperCase(), { size: 12, fill: C.danger, ls: 1.2 }), T(x + 44, y + 37, p.name, { size: 11, fill: C.dim }));
+  return g(`Fiche ${who}`, out);
+}
+function hudTop(d, o = {}) {
+  const out = [U.iconBtn(d, M, 8, 44, 40, 'pause', { on: o.paused, label: 'Menu du combat' })];
+  out.push(D(PW - M, 30, o.clock || '0:42', { size: 22, anchor: 'end' }), T(PW - M, 46, o.stad || 'CLASSIQUE · NOYAU HOLO', { size: 10, fill: C.cyan, anchor: 'end', weight: 700, ls: 1 }));
+  if (o.round) out.push(g('Manche', [path(chamfer(PW / 2 - 70, 0, 140, 34, [0, 0, 12, 12]), { fill: '#0D0B2E', stroke: C.line }), label(PW / 2, 14, o.round, C.muted, { anchor: 'middle' }),
+    D(PW / 2 - 14, 30, String(o.score[0]), { size: 14, fill: C.green, anchor: 'end' }), D(PW / 2, 30, '–', { size: 14, fill: C.dim, anchor: 'middle' }), D(PW / 2 + 14, 30, String(o.score[1]), { size: 14, fill: C.danger })]));
+  return g('Haut du combat', out);
+}
+function battleScreen(d, o = {}) {
+  const me = P['Cyclone Furieux'], bot = P['Forteresse'], scheme = o.scheme || 'buttons', out = [U.screenBg(d, { floor: false, cx: 0.5, cy: 0.5 }), arena(d, o.stadium)];
+  const cw = 196, lx = M, rx = PW - M - cw;
+  if (o.melee) {
+    out.push(spinner(d, -0.25, -0.15, me, { tag: 'VOUS', trail: [-40, 30], angle: 0.2 }), spinner(d, 0.3, -0.35, bot, { tag: 'BOT 1', col: C.danger, angle: 1 }),
+      spinner(d, 0.15, 0.4, P['Éternelle'], { tag: 'BOT 2', col: C.warn, trail: [40, 20], col2: C.warn }), spinner(d, 0.92, 0.55, P['Comète'], { out: true }));
+    out.push(hudTop(d, { clock: '1:07' }));
+    out.push(hudCard(d, lx, 56, cw, 'Vous', me, 61, { me: true, h: 62 }), hudCard(d, lx, 124, cw, 'Bot 2', P['Éternelle'], 74, { col: C.warn, h: 62 }));
+    out.push(hudCard(d, rx, 56, cw, 'Bot 1', bot, 38, { col: C.danger, h: 62 }), hudCard(d, rx, 124, cw, 'Bot 3', P['Comète'], 0, { col: C.magenta, h: 62, out: 'éjectée · 4e' }));
+  } else {
+    if (o.aiming) {
+      const [x, y] = at(-0.5, 0);
+      out.push(Ar.top(d, x, y, 20, me, { angle: 0.4 }), tag(x, y - 26, 'VOUS', C.green), Ar.top(d, ...at(0.5, 0), 20, bot, { angle: 1 }), tag(...[at(0.5, 0)[0], at(0.5, 0)[1] - 26], 'BOT', C.danger));
+      out.push(path(`M${x + 24},${y - 6} L${x + 150},${y - 60}`, { stroke: C.green, 'stroke-width': 3, 'stroke-dasharray': '7 6' }), path(`M${x + 150},${y - 60} l-14,-1 l7,12 Z`, { fill: C.green }),
+        circle(x + 160, y - 64, 18, { fill: '#FFFFFF', opacity: 0.12, stroke: '#FFFFFF', 'stroke-opacity': 0.5 }), L.icon('hand', x + 168, y - 52, 26, '#FFFFFF'),
+        D(x + 96, y - 50, 'FORCE 72 %', { size: 11, fill: C.green, transform: `rotate(-23 ${x + 96} ${y - 50})` }));
+      out.push(g('Consigne', [path(skew(PW / 2 - 190, 58, 380, 30, 10), { fill: '#05040F', 'fill-opacity': 0.75, stroke: C.cyan, 'stroke-opacity': 0.6 }),
+        T(PW / 2, 78, 'Glissez depuis votre toupie, relâchez pour lancer', { size: 13, anchor: 'middle' })]));
+    } else {
+      out.push(spinner(d, -0.18, -0.2, me, { tag: 'VOUS', trail: [-60, 40], angle: 0.2 }), spinner(d, 0.12, -0.05, bot, { tag: 'BOT', col: C.danger, angle: 1.2 }));
+      out.push(...[0, 1, 2, 3, 4].map(i => { const [x, y] = at(-0.03, -0.13), a = i * 1.2; return line(x + Math.cos(a) * 6, y + Math.sin(a) * 6, x + Math.cos(a) * 18, y + Math.sin(a) * 18, { stroke: i % 2 ? C.warn : '#FFFFFF', 'stroke-width': 1.5 }); }));
+    }
+    out.push(hudTop(d, { clock: o.aiming ? '0:00' : '0:42', paused: o.pause, round: o.round, score: o.score }));
+    out.push(hudCard(d, lx, 56, cw, 'Vous', me, o.aiming ? 100 : 72, { me: true, status: o.aiming ? 'Vise…' : 'Dash prêt · spécial prêt', statusCol: o.aiming ? C.muted : C.green }));
+    out.push(hudCard(d, rx, 56, cw, 'Bot · Normal', bot, o.aiming ? 100 : 41, { col: C.danger, status: o.aiming ? 'Prêt à lancer' : 'Onde de choc prête' }));
+  }
+  if (!o.aiming) {
+    if (scheme === 'buttons') out.push(U.joystick(d, M + 62, PH - 70, 52, -0.35, -0.3));
+    if (scheme === 'tilt') out.push(g('Inclinaison', [circle(M + 62, PH - 70, 52, { fill: '#0A0826', 'fill-opacity': 0.7, stroke: C.lineHi }),
+      line(M + 10, PH - 70, M + 114, PH - 70, { stroke: C.line }), line(M + 62, PH - 122, M + 62, PH - 18, { stroke: C.line }),
+      circle(M + 62, PH - 70, 22, { fill: 'none', stroke: C.line, 'stroke-dasharray': '3 5' }), circle(M + 84, PH - 84, 12, { fill: C.green, stroke: '#B9FFD6' }),
+      `<g transform="rotate(-18 ${M + 150} ${PH - 92})">${L.icon('phone', M + 150, PH - 92, 30, C.cyan)}</g>`, U.btn(d, M + 124, PH - 54, 92, 34, 'Recalibrer', { variant: 'ghost', size: 10 })]));
+    if (scheme === 'gestures') out.push(g('Gestes', [U.chip(d, M, PH - 84, 'Glisser · piloter', C.cyan, 'hand'), U.chip(d, M, PH - 52, 'Toucher · dash', C.green, 'dash'),
+      U.chip(d, PW - M - U.chipW('Appui long · spécial', 1), PH - 52, 'Appui long · spécial', C.magenta, 'bolt'),
+      circle(220, 300, 26, { fill: '#FFFFFF', opacity: 0.1, stroke: '#FFFFFF', 'stroke-opacity': 0.4 }), path('M160,330 Q190,310 214,304', { fill: 'none', stroke: '#FFFFFF', 'stroke-width': 3, opacity: 0.35, 'stroke-linecap': 'round' })]));
+    if (scheme !== 'gestures') out.push(U.roundAction(d, PW - M - 50, PH - 62, 46, o.duel ? 'Appui' : 'Dash', { icon: 'dash', ring: o.cooldown }),
+      U.roundAction(d, PW - M - 148, PH - 44, 34, 'Spécial', { glyph: 'lance', color: C.magenta, size: 10 }));
+  }
+  if (o.tutorial) out.push(g('Tutoriel', [rect(0, 0, PW, PH, { fill: '#03020A', opacity: 0.5 }), circle(PW - M - 50, PH - 62, 56, { fill: 'none', stroke: C.cyan, 'stroke-width': 2.5, 'stroke-dasharray': '6 5' }),
+    U.roundAction(d, PW - M - 50, PH - 62, 46, 'Dash', { icon: 'dash' }),
+    path(chamfer(PW - M - 410, 196, 330, 104, [14, 0, 14, 0]), { fill: '#0B0930', stroke: C.cyan, 'stroke-width': 1.4 }), rect(PW - M - 410, 210, 3, 32, { fill: C.cyan }),
+    D(PW - M - 394, 220, 'DASH', { size: 13, ls: 2, fill: C.cyan }), T(PW - M - 92, 220, '3 / 7', { size: 11, fill: C.muted, anchor: 'end', font: F.display, weight: 700 }),
+    T(PW - M - 394, 244, 'L’adversaire est proche : touchez DASH pour', { size: 13 }), T(PW - M - 394, 262, 'foncer sur lui, avec plus d’attaque.', { size: 13 }),
+    path(skew(PW - M - 394, 274, 120, 18, 5), { fill: C.cyan, 'fill-opacity': 0.15, stroke: C.cyan }), D(PW - M - 334, 287, 'JEU EN PAUSE', { size: 9.5, fill: C.cyan, anchor: 'middle', ls: 1.4 }),
+    path(`M${PW - M - 120},300 l18,20 l18,-20 Z`, { fill: '#0B0930', stroke: C.cyan, 'stroke-width': 1.4 }), rect(PW - M - 119, 298, 34, 4, { fill: '#0B0930' })]));
+  if (o.pause) out.push(U.drawer(d, 'left', 380, 'Menu du combat', (x, y, w) => g('Pause', [
+    U.btn(d, x, y, w - 10, 50, 'Reprendre', { variant: 'primary', icon: 'play' }), U.btn(d, x, y + 60, w - 10, 44, 'Changer de toupies', { icon: 'build', size: 12.5 }),
+    U.seg(d, x, y + 132, w - 10, ['Joystick', 'Inclinaison', 'Gestes'], 0, { label: 'Commandes', h: 34, size: 10.5 }),
+    U.btn(d, x, y + 184, (w - 20) / 2, 40, 'Aide', { variant: 'ghost', icon: 'help', size: 12 }), U.btn(d, x + (w - 20) / 2 + 10, y + 184, (w - 20) / 2, 40, 'Règles', { variant: 'ghost', icon: 'sliders', size: 12 }),
+    T(x, y + 248, 'Solo : le combat est en pause.', { size: 12, fill: C.muted }), T(x, y + 264, 'En réseau, il continue pendant que ce menu est ouvert.', { size: 12, fill: C.dim }),
+    U.btn(d, x, PH - 54, w - 10, 44, 'Quitter le combat', { variant: 'danger', icon: 'quit', size: 12.5 })]), { sub: 'solo · en pause', accent: C.cyan }));
+  return out;
+}
+function battleBoard() {
+  return U.board('m06-ecran-combat', 'Mobile · écran', 'Combat', 'L’arène carrée au centre, les fiches de chaque côté, les commandes sous les pouces. Trois schémas de commandes au choix.',
+    [{ title: 'Visée', draw: d => battleScreen(d, { aiming: true }), notes: ['Glisser depuis sa toupie : direction et longueur de la flèche = force', 'Relâcher lance la toupie ; pas de bouton à viser'] },
+      { title: 'Combat · joystick et boutons', draw: d => battleScreen(d), notes: ['Joystick sous le pouce gauche, DASH et SPÉCIAL sous le pouce droit', 'Le contour de DASH se remplit pendant la recharge'] },
+      { title: 'Mêlée à 4 · gestes', draw: d => battleScreen(d, { melee: true, scheme: 'gestures' }), notes: ['Deux fiches de chaque côté ; une toupie éjectée garde sa place grisée', 'Gestes : glisser pour piloter, toucher pour dasher, appui long : spécial'] },
+      { title: 'Menu du combat', draw: d => battleScreen(d, { pause: true }), notes: ['Le bouton pause remplace « Menu » et « Changer de toupies » du PC', 'On peut changer de schéma de commandes sans quitter le combat'] }]);
+}
+
+// ============================== M07 DUELS ET TUTORIEL ==============================
+function duelScreen(d, mode) {
+  const me = P['Cyclone Furieux'], bot = P['Forteresse'], out = [U.screenBg(d, { floor: false }), arena(d)];
+  out.push(rect(0, 0, PW, PH, { fill: '#03020A', opacity: 0.45 }));
+  const cx = PW / 2, cy = 160;
+  out.push(Ar.top(d, cx - 30, cy, 34, me, { aura: true, angle: 0.3 }), Ar.top(d, cx + 30, cy, 34, bot, { aura: true, angle: 1 }),
+    ...[...Array(10)].map((_, i) => { const a = i * 0.63; return line(cx + Math.cos(a) * 6, cy + Math.sin(a) * 6, cx + Math.cos(a) * (30 + (i % 3) * 10), cy + Math.sin(a) * (30 + (i % 3) * 10), { stroke: i % 2 ? C.warn : '#FFFFFF', 'stroke-width': 1.8 }); }));
+  out.push(g('Bannière duel', [path(skew(cx - 150, 48, 300, 46, 16), { fill: d.lin([[0, C.violet, 0], [0.2, C.violet, 0.45], [0.8, C.magenta, 0.45], [1, C.magenta, 0]], 0) }),
+    D(cx, 82, mode === 'rush' ? 'DUEL · RAFALE' : 'DUEL !', { size: 28, anchor: 'middle', italic: true, ls: 3 })]));
+  out.push(hudCard(d, M, 56, 170, 'Vous', me, 64, { me: true, h: 62 }), hudCard(d, PW - M - 170, 56, 170, 'Bot', bot, 47, { col: C.danger, h: 62 }));
+  const bx = 150, bw = PW - 2 * bx - 30;
+  if (mode === 'rush') {
+    const m = bx + bw * 0.62;
+    out.push(g('Corde', [path(skew(bx, 262, bw, 30, 10), { fill: '#07061A', stroke: C.line }), path(skew(bx, 262, m - bx, 30, 10), { fill: d.lin([[0, C.green, 0.9], [1, C.green, 0.35]], 0) }),
+      path(skew(m, 262, bx + bw - m, 30, 10), { fill: d.lin([[0, C.danger, 0.35], [1, C.danger, 0.9]], 0) }), line(bx + bw / 2, 254, bx + bw / 2, 300, { stroke: '#FFFFFF', 'stroke-dasharray': '3 3', opacity: 0.6 }),
+      path(`M${m - 9},248 h18 l-9,12 Z`, { fill: '#FFFFFF' }), rect(m - 2, 258, 4, 38, { fill: '#FFFFFF' }),
+      D(bx, 244, 'VOUS 9', { size: 13, fill: C.green }), D(bx + bw, 244, '7 BOT', { size: 13, fill: C.danger, anchor: 'end' }),
+      D(cx - 15, 244, '2,1 S', { size: 13, anchor: 'middle', fill: C.warn }),
+      T(cx - 15, 322, 'Touchez le plus vite possible : 12 appuis d’avance gagnent aussitôt', { size: 13, anchor: 'middle' }),
+      T(cx - 15, 340, 'Au bout de 3,5 s, le plus avancé gagne · pile au milieu : nul', { size: 12, anchor: 'middle', fill: C.muted })]));
+  } else {
+    const bar = (y, h, zone, cur, small) => g(small ? 'Barre adverse' : 'Votre barre', [path(skew(bx, y, bw, h, h * 0.35), { fill: d.lin([[0, '#5A1030'], [0.5, '#C2335A'], [1, '#5A1030']], 0), opacity: small ? 0.7 : 1 }),
+      path(skew(bx + bw * (0.5 - zone), y, bw * zone * 2, h, h * 0.35), { fill: d.lin([[0, C.green], [1, C.lime]], 0) }), path(`M${bx + bw * cur - 3},${y - 6} h6 l-1,${h + 12} h-4 Z`, { fill: '#FFFFFF' })]);
+    out.push(label(bx, 232, 'Bot', C.danger), T(bx + bw, 232, 'série 1', { size: 10.5, fill: C.muted, anchor: 'end' }), bar(238, 12, 0.13, 0.66, true));
+    out.push(bar(268, 28, 0.17, 0.47), T(cx - 15, 322, 'Touchez l’écran quand le curseur est dans le vert', { size: 13, anchor: 'middle' }),
+      label(bx, 344, 'Série à taille minimale'), ...[0, 1, 2].map(i => path(`M${bx + 146 + i * 18},337 l6,-6 l6,6 l-6,6 Z`, { fill: i < 2 ? C.green : 'none', stroke: C.green })),
+      T(bx + bw, 344, 'Le premier qui rate subit 1,5× les dégâts du dash', { size: 11, fill: C.muted, anchor: 'end' }));
+  }
+  out.push(U.roundAction(d, PW - M - 50, PH - 62, 46, 'Appui', { icon: 'hand', color: C.cyan }), T(PW - M - 50, PH - 6, 'ou n’importe où', { size: 10, fill: C.dim, anchor: 'middle' }));
+  return out;
+}
+function duelBoard() {
+  return U.board('m07-ecran-duel-tutoriel', 'Mobile · écran', 'Duels, tutoriel, inclinaison', 'Deux dashs qui se croisent déclenchent le duel choisi ; tout l’écran sert alors de bouton.',
+    [{ title: 'Duel · timing', draw: d => duelScreen(d, 'timing'), notes: ['Toucher quand le curseur traverse la zone verte, qui rétrécit', 'Le premier qui rate perd le duel'] },
+      { title: 'Duel · rafale', draw: d => duelScreen(d, 'rush'), notes: ['Tir à la corde : chaque toucher pousse le curseur vers l’adversaire', 'Le type de duel se choisit dans les Paramètres ou les règles'] },
+      { title: 'Tutoriel', draw: d => battleScreen(d, { tutorial: true }), notes: ['Une bulle par action, le jeu attend le geste présenté', 'Le bouton concerné est mis en avant, le reste est assombri'] },
+      { title: 'Commandes · inclinaison', draw: d => battleScreen(d, { scheme: 'tilt', stadium: 'glace', round: 'Manche 2', score: [1, 0] }), notes: ['Incliner le téléphone pour piloter ; la position au lancement sert de neutre', 'Recalibrer reprend la position actuelle comme neutre'] }]);
+}
+
+// ============================== M08 RÉSULTAT ==============================
+function resultScreen(d, kind) {
+  const me = P['Cyclone Furieux'], out = [U.screenBg(d, { floor: false }), arena(d), rect(0, 0, PW, PH, { fill: '#03020A', opacity: 0.72 })];
+  const win = kind === 'victory' || kind === 'round', col = win ? C.green : C.danger;
+  out.push(...[...Array(12)].map((_, i) => { const a = -Math.PI / 2 + (i - 5.5) * 0.18; return path(`M${200 + Math.cos(a) * 60},${210 + Math.sin(a) * 60} L${200 + Math.cos(a - 0.05) * 260},${210 + Math.sin(a - 0.05) * 260} L${200 + Math.cos(a + 0.05) * 260},${210 + Math.sin(a + 0.05) * 260} Z`, { fill: col, opacity: 0.07 }); }));
+  out.push(Ar.top(d, 200, 196, 84, kind === 'lan' ? P['Forteresse'] : me, { aura: true, angle: 0.4 }));
+  out.push(D(200, 318, (kind === 'lan' ? 'Forteresse' : me.name).toUpperCase(), { size: 15, ls: 1.6, anchor: 'middle' }), T(200, 336, kind === 'lan' ? 'Bastion · Carapace · Pivot · Tempête' : 'Lame Cyclone · Griffe · Gomme · Perçant', { size: 11.5, fill: C.muted, anchor: 'middle' }));
+  const x = 400, title = { victory: 'VICTOIRE !', melee: '2E PLACE', round: 'MANCHE GAGNÉE', lan: 'DÉFAITE…' }[kind];
+  out.push(D(x, 96, title, { size: 38, ls: 3, italic: true, fill: kind === 'melee' ? C.warn : win ? '#FFFFFF' : C.danger }));
+  const reason = { victory: 'Éjection hors du stadium', melee: 'Mêlée à 4 · Bot 2 l’emporte', round: 'Plus d’endurance · Kira', lan: 'Éjectée par Léa' }[kind];
+  out.push(path(skew(x, 108, tw(reason.toUpperCase(), 11, true, 1.4) + 40, 24, 8), { fill: d.lin([[0, col], [1, kind === 'melee' ? C.warn : win ? C.lime : C.warn]], 0) }), D(x + 20, 125, reason.toUpperCase(), { size: 11, ls: 1.4, fill: '#03140A' }));
+  if (kind === 'melee') {
+    [['1', 'Bot 2', P['Éternelle'], C.warn], ['2', 'Vous', me, C.green], ['3', 'Bot 1', P['Forteresse'], C.danger], ['4', 'Bot 3', P['Comète'], C.magenta]].forEach(([n, who, p, c], i) =>
+      out.push(g(`Rang ${n}`, [U.card(d, x, 146 + i * 42, 300, 36, { selected: who === 'Vous', accent: C.green }), D(x + 16, 146 + i * 42 + 24, n, { size: 15, fill: i === 0 ? C.warn : C.muted }),
+        Ar.top(d, x + 48, 146 + i * 42 + 18, 12, p, { shadow: false }), D(x + 68, 146 + i * 42 + 23, who.toUpperCase(), { size: 12, fill: c }), T(x + 290, 146 + i * 42 + 23, p.name, { size: 11, fill: C.muted, anchor: 'end' })])));
+  } else {
+    const stats = kind === 'round' ? [['Score', '1 – 0'], ['Série', 'à 2'], ['Chocs', '9'], ['Endurance', '38']] : [['Durée', '00:18'], ['Chocs', '12'], ['Dashs', '4'], ['Endurance', '46']];
+    out.push(U.card(d, x, 146, PW - M - x, 66, { fill: '#100D35' }));
+    stats.forEach(([n, v], i) => { const sx = x + 16 + i * ((PW - M - x - 16) / 4); out.push(label(sx, 166, n), D(sx, 196, v, { size: 20, fill: i === 0 && kind === 'round' ? C.green : i === 3 ? C.green : C.text })); });
+    out.push(T(x, 236, kind === 'round' ? 'Demi-finale · premier à 2 manches · stadium Glace' : kind === 'lan' ? 'Lobby « Salon de Léa » · 4 joueurs' : 'Victoires 4 · Défaites 1 · Nuls 0', { size: 13, fill: C.muted }));
+  }
+  const by = PH - 70, bw = PW - M - x;
+  if (kind === 'victory') out.push(U.btn(d, x, by, 190, 52, 'Revanche', { variant: 'primary', icon: 'update' }), U.btn(d, x + 200, by, bw - 200 - 110, 52, 'Changer de toupies', { size: 12.5 }), U.btn(d, PW - M - 100, by, 100, 52, 'Menu', { variant: 'ghost' }));
+  if (kind === 'melee') out.push(U.btn(d, x, by, 190, 52, 'Revanche', { variant: 'primary', icon: 'update' }), U.btn(d, x + 200, by, bw - 310, 52, 'Changer de toupies', { size: 12.5 }), U.btn(d, PW - M - 100, by, 100, 52, 'Menu', { variant: 'ghost' }));
+  if (kind === 'round') out.push(U.btn(d, x, by, bw - 170, 52, 'Manche suivante', { variant: 'primary', icon: 'next' }), U.btn(d, PW - M - 160, by, 160, 52, 'Quitter', { variant: 'ghost', icon: 'save', size: 12.5 }));
+  if (kind === 'lan') out.push(g('Attente', [U.card(d, x, by - 4, bw, 56), L.icon('lan', x + 26, by + 24, 20, C.cyan), T(x + 48, by + 20, 'L’hôte ramène tout le monde au lobby…', { size: 13.5 }),
+    T(x + 48, by + 38, 'Quitter : bouton retour d’Android', { size: 11.5, fill: C.muted })]));
+  return out;
+}
+function resultBoard() {
+  return U.board('m08-ecran-resultat', 'Mobile · écran', 'Résultat', 'Titre sans effet chromatique (comme sur PC), toupie gagnante à gauche, bilan et actions à droite.',
+    [{ title: 'Victoire en solo', draw: d => resultScreen(d, 'victory'), notes: ['Revanche sous le pouce droit, changer de toupies, menu', 'Bilan : durée, chocs, dashs, endurance ; série de victoires'] },
+      { title: 'Mêlée · classement', draw: d => resultScreen(d, 'melee'), notes: ['En mêlée, le classement complet remplace le bilan', 'Toupie éjectée : rang selon l’ordre d’élimination'] },
+      { title: 'Manche de tournoi', draw: d => resultScreen(d, 'round'), notes: ['Score de la série, puis manche suivante', 'Quitter propose de sauvegarder le tournoi solo'] },
+      { title: 'Partie en réseau', draw: d => resultScreen(d, 'lan'), notes: ['Chez un client : l’hôte ramène tout le monde au lobby', 'Chez l’hôte : bouton « Retour au lobby » à la place'] }]);
+}
+
+if (require.main === module) for (const b of [principles, components, menuBoard, setupBoard, builderBoard, movesBoard, battleBoard, duelBoard, resultBoard]) b().save(OUT);
+module.exports = { principles, components, menuBoard, setupBoard, builderBoard, movesBoard, battleBoard, duelBoard, resultBoard };
