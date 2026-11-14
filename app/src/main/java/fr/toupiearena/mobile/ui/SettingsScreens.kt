@@ -232,7 +232,7 @@ fun HelpScreen(app: AppController) {
     }
 }
 
-private fun controlRows(scheme: ControlScheme): List<Pair<String, String>> {
+fun controlRows(scheme: ControlScheme): List<Pair<String, String>> {
     val steer = when (scheme) {
         ControlScheme.Buttons -> tr("joystick en bas à gauche (maintenu)")
         ControlScheme.Tilt -> tr("incliner le téléphone (la position au début du combat sert de neutre)")

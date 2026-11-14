@@ -1,5 +1,6 @@
 package fr.toupiearena.mobile.ui
 
+import fr.toupiearena.mobile.ui.holo.tr
 import fr.toupiearena.mobile.core.PartCatalog
 import fr.toupiearena.mobile.game.Battle
 import fr.toupiearena.mobile.game.BattleConfig
@@ -47,34 +48,26 @@ class TutorialSession(private val scheme: ControlScheme) : MatchSession() {
 
     private val steerHow
         get() = when (scheme) {
-            ControlScheme.Buttons -> "déplacez le joystick à gauche"
-            ControlScheme.Tilt -> "inclinez le téléphone"
-            ControlScheme.Gestures -> "glissez le doigt sur l'écran"
+            ControlScheme.Buttons -> tr("déplacez le joystick à gauche")
+            ControlScheme.Tilt -> tr("inclinez le téléphone")
+            ControlScheme.Gestures -> tr("glissez le doigt sur l'écran")
         }
-    private val dashHow get() = if (scheme == ControlScheme.Gestures) "touchez l'écran" else "appuyez sur DASH"
-    private val specialHow get() = if (scheme == ControlScheme.Gestures) "faites un appui long sur l'écran" else "appuyez sur SPÉCIAL"
-    private val duelHow get() = "touchez l'écran"
+    private val dashHow get() = if (scheme == ControlScheme.Gestures) tr("touchez l'écran") else tr("appuyez sur DASH")
+    private val specialHow get() = if (scheme == ControlScheme.Gestures) tr("faites un appui long sur l'écran") else tr("appuyez sur SPÉCIAL")
+    private val duelHow get() = tr("touchez l'écran")
 
     /** Texte de la bulle (vide : aucune) et toupie désignée (-1 : aucune). */
     val bubble: String
         get() = when {
-            step == Step.Aim -> "Bienvenue dans le tutoriel !\nVotre toupie est à gauche. Posez le doigt sur l'arène et " +
-                "glissez : la flèche donne la direction, sa longueur la force. Relâchez pour lancer."
-            step == Step.Done -> "Bravo ! Duel gagné et toupie adverse éjectée : vous connaissez toutes les actions."
+            step == Step.Aim -> tr("Bienvenue dans le tutoriel !\nVotre toupie est à gauche. Posez le doigt sur l'arène et glissez : la flèche donne la direction, sa longueur la force. Relâchez pour lancer.")
+            step == Step.Done -> tr("Bravo ! Duel gagné et toupie adverse éjectée : vous connaissez toutes les actions.")
             !isPaused -> ""
-            step == Step.Steer -> "Votre toupie avance seule, dans le sens inverse de sa rotation, et revient vers le " +
-                "centre. Pour la piloter légèrement, $steerHow."
-            step == Step.Dash -> "L'adversaire est proche : $dashHow pour dasher. Le dash fonce sur lui avec plus " +
-                "d'attaque, contre un peu d'endurance."
-            step == Step.Special -> "Votre coup spécial (donné par le boulon) : $specialHow. Une seule fois par partie, " +
-                "il coûte un quart de l'endurance du moment et son effet compte autant que ses dégâts."
-            step == Step.Duel -> "Il fonce sur vous ! Répondez par un dash ($dashHow) : deux dashs qui se percutent " +
-                "déclenchent un duel."
-            step == Step.DuelIntro -> "Duel ! Les toupies restent bloquées. En bas, un curseur blanc parcourt votre " +
-                "barre : $duelHow quand il est dans la zone verte. Elle rétrécit à chaque réussite ; le premier qui " +
-                "rate subit 1,5× les dégâts du dash adverse.\nTouchez l'écran pour commencer."
-            step == Step.DuelMiss -> "Raté : le curseur était dans le rouge. Attendez qu'il passe au centre, dans la " +
-                "zone verte. Pour cette fois, l'erreur ne compte pas !\nTouchez l'écran pour reprendre."
+            step == Step.Steer -> tr("Votre toupie avance seule, dans le sens inverse de sa rotation, et revient vers le centre. Pour la piloter légèrement, %1.", steerHow)
+            step == Step.Dash -> tr("L'adversaire est proche : %1 pour dasher. Le dash fonce sur lui avec plus d'attaque, contre un peu d'endurance.", dashHow)
+            step == Step.Special -> tr("Votre coup spécial (donné par le boulon) : %1. Une seule fois par partie, il coûte un quart de l'endurance du moment et son effet compte autant que ses dégâts.", specialHow)
+            step == Step.Duel -> tr("Il fonce sur vous ! Répondez par un dash (%1) : deux dashs qui se percutent déclenchent un duel.", dashHow)
+            step == Step.DuelIntro -> tr("Duel ! Les toupies restent bloquées. En bas, un curseur blanc parcourt votre barre : %1 quand il est dans la zone verte. Elle rétrécit à chaque réussite ; le premier qui rate subit 1,5× les dégâts du dash adverse.\nTouchez l'écran pour commencer.", duelHow)
+            step == Step.DuelMiss -> tr("Raté : le curseur était dans le rouge. Attendez qu'il passe au centre, dans la zone verte. Pour cette fois, l'erreur ne compte pas !\nTouchez l'écran pour reprendre.")
             else -> ""
         }
 

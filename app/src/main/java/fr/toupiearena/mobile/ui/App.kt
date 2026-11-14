@@ -2,6 +2,19 @@ package fr.toupiearena.mobile.ui
 
 import android.content.Context
 import android.net.wifi.WifiManager
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import fr.toupiearena.mobile.ui.holo.BtnVariant
+import fr.toupiearena.mobile.ui.holo.Hint
+import fr.toupiearena.mobile.ui.holo.Holo
+import fr.toupiearena.mobile.ui.holo.HoloButton
+import fr.toupiearena.mobile.ui.holo.HoloIcon
+import fr.toupiearena.mobile.ui.holo.Panel
+import fr.toupiearena.mobile.ui.holo.bodyStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -340,26 +353,31 @@ fun ToupieApp(app: AppController) {
 @Composable
 private fun BattleFor(app: AppController, screen: Screen.Battle) {
     val session = screen.session
+    @Composable
+    fun battle(pausable: Boolean, leave: String, changeTops: (() -> Unit)? = null, actions: @Composable RowScope.() -> Unit = {}) =
+        BattleScreen(session, app.prefs.scheme, { app.prefs.scheme = it }, app.prefs.tiltSensitivity, pausable, leave, app::leaveBattle, changeTops, actions)
     when (screen.mode) {
-        Screen.Mode.Solo -> BattleScreen(session, app.prefs.scheme, app.prefs.tiltSensitivity, "Combat contre le bot",
-            "Menu", app::leaveBattle) {
-            SecondaryButton("Changer de toupies", { session.close(); app.screen = Screen.SoloSetup })
-            AccentButton("Revanche", app::rematch)
+        Screen.Mode.Solo -> {
+            val changeTops = { session.close(); app.screen = Screen.SoloSetup }
+            battle(true, tr("Quitter le combat"), changeTops) {
+                HoloButton(tr("Revanche"), app::rematch, Modifier.weight(1.1f), BtnVariant.Primary, HoloIcon.Random, height = 48.dp)
+                HoloButton(tr("Changer de toupies"), changeTops, Modifier.weight(1.2f), height = 48.dp, textSize = 11.5f)
+                HoloButton(tr("Menu"), app::leaveBattle, Modifier.weight(0.7f), BtnVariant.Ghost, height = 48.dp)
+            }
         }
-        Screen.Mode.Tutorial -> BattleScreen(session, app.prefs.scheme, app.prefs.tiltSensitivity, "Tutoriel",
-            "Quitter", app::leaveBattle) {
-            AccentButton("Recommencer", app::startTutorial)
+        Screen.Mode.Tutorial -> battle(true, tr("Quitter le tutoriel")) {
+            HoloButton(tr("Recommencer"), app::startTutorial, Modifier.weight(1f), BtnVariant.Primary, HoloIcon.Random, height = 48.dp)
+            HoloButton(tr("Menu"), app::leaveBattle, Modifier.weight(0.6f), BtnVariant.Ghost, height = 48.dp)
         }
-        Screen.Mode.Tournament -> BattleScreen(session, app.prefs.scheme, app.prefs.tiltSensitivity,
-            if (session.state.series?.format == fr.toupiearena.mobile.game.MatchFormat.Classic) "Match de tournoi · premier à 4 points"
-            else "Match de tournoi · premier à 2 manches", "Abandonner", app::leaveBattle)
-        Screen.Mode.LanHost -> BattleScreen(session, app.prefs.scheme, app.prefs.tiltSensitivity, "Partie en réseau local (hôte)",
-            "Fermer le lobby", app::leaveBattle) {
-            AccentButton("Retour au lobby", app::returnToLobby)
+        Screen.Mode.Tournament -> battle(app.isSoloTournament, tr("Abandonner le match"))
+        Screen.Mode.LanHost -> battle(false, tr("Fermer le lobby")) {
+            HoloButton(tr("Retour au lobby"), app::returnToLobby, Modifier.weight(1f), BtnVariant.Primary, HoloIcon.Lan, height = 48.dp)
         }
-        Screen.Mode.LanClient -> BattleScreen(session, app.prefs.scheme, app.prefs.tiltSensitivity,
-            "Partie en réseau local", "Quitter le lobby", app::leaveBattle) {
-            Hint("En attente de l'hôte pour revenir au lobby…")
+        Screen.Mode.LanClient -> battle(false, tr("Quitter le lobby")) {
+            Panel(Modifier.weight(1f)) {
+                Text(tr("L'hôte ramène tout le monde au lobby…"), style = bodyStyle(13.sp))
+                Hint(tr("Quitter : bouton retour d'Android"), color = Holo.dim)
+            }
         }
     }
 }
@@ -369,8 +387,10 @@ private fun MessageDialog(app: AppController) {
     val text = app.message ?: return
     androidx.compose.material3.AlertDialog(
         onDismissRequest = { app.message = null },
-        confirmButton = { AccentButton("OK", { app.message = null }) },
-        text = { androidx.compose.material3.Text(text) },
+        confirmButton = { HoloButton(tr("OK"), { app.message = null }, Modifier.width(110.dp), BtnVariant.Primary, height = 40.dp) },
+        text = { Text(text, style = bodyStyle(14.sp)) },
+        containerColor = Holo.panel,
+        shape = fr.toupiearena.mobile.ui.holo.Chamfer(14.dp),
     )
 }
 
