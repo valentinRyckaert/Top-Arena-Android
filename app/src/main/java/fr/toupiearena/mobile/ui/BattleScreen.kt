@@ -480,7 +480,7 @@ private fun DrawScope.drawArena(session: MatchSession, effects: BattleEffects, f
             lineTo((to - n * (head * 0.6f)).x, (to - n * (head * 0.6f)).y)
             close()
         }, Holo.green)
-        val label = textMeasurer.measure(tr("Force %1 %", (t * 100).roundToInt()).uppercase(), displayStyle(9.sp, Holo.green, 0.08f))
+        val label = textMeasurer.measure(tr("Force %1 %", (aim.second * 100).roundToInt()).uppercase(), displayStyle(9.sp, Holo.green, 0.08f))
         drawText(label, topLeft = to + d * (head * 1.6f) - Offset(label.size.width / 2f, label.size.height / 2f) + n * (head * 1.2f))
     }
     with(effects) { drawTrails(state.spinners, toScreen, radius) }
