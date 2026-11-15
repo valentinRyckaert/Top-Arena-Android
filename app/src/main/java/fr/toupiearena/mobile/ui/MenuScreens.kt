@@ -29,7 +29,6 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.toupiearena.mobile.core.Top
@@ -63,7 +62,6 @@ import kotlin.random.Random
 @Composable
 fun MenuScreen(app: AppController) {
     var play by remember { mutableStateOf(false) }
-    val version = LocalContext.current.let { remember { it.packageManager.getPackageInfo(it.packageName, 0).versionName.orEmpty() } }
     HoloScreen {
         MenuBattle(app, Modifier.fillMaxHeight().fillMaxWidth(0.62f).align(Alignment.CenterEnd))
         Column(Modifier.width(340.dp + EdgeMargin).fillMaxHeight().padding(start = EdgeMargin, top = 22.dp, bottom = 18.dp)) {
@@ -81,10 +79,32 @@ fun MenuScreen(app: AppController) {
                 HoloButton(tr("Aide"), { app.screen = Screen.Help }, Modifier.weight(1f), BtnVariant.Ghost, HoloIcon.Help, height = 42.dp, textSize = 12f)
             }
         }
-        Text("v$version", style = displayStyle(11.sp, Holo.dim, 0.05f), modifier = Modifier.align(Alignment.BottomEnd).padding(end = EdgeMargin, bottom = 8.dp))
+        UpdateChip(app.updater, Modifier.align(Alignment.BottomEnd).padding(end = EdgeMargin, bottom = 8.dp))
         PlayDrawer(app, play) { play = false }
     }
     if (!app.repositoryLoaded) LaunchedEffect(Unit) { app.message = tr("Le fichier des toupies est illisible et a été ignoré.") }
+}
+
+/** Version installée et mises à jour : vérifiées à l'ouverture ; toucher pour revérifier ou installer. */
+@Composable
+private fun UpdateChip(updater: Updater, modifier: Modifier) {
+    LaunchedEffect(Unit) { if (updater.state == Updater.State.Idle) updater.check() }
+    val s = updater.state
+    val v = updater.current
+    val (text, color) = when (s) {
+        Updater.State.Idle, Updater.State.Checking -> tr("v%1 · recherche de mise à jour…", v) to Holo.dim
+        Updater.State.UpToDate -> tr("v%1 · à jour", v) to Holo.dim
+        is Updater.State.Available -> tr("Mise à jour v%1 · installer", s.release.version) to Holo.warn
+        is Updater.State.Downloading -> tr("Téléchargement v%1 · %2 %", s.release.version, (s.progress * 100).toInt()) to Holo.warn
+        is Updater.State.Failed -> tr("v%1 · vérification impossible", v) to Holo.dim
+    }
+    Chip(text, color, HoloIcon.Update, modifier) {
+        when (s) {
+            is Updater.State.Available -> updater.download(s.release)
+            Updater.State.Checking, is Updater.State.Downloading -> Unit
+            else -> updater.check()
+        }
+    }
 }
 
 /** Logo « TOP ARENA » : texte décalé en magenta et cyan, bandeau vert « ARENA ». */

@@ -75,6 +75,7 @@ sealed class Screen {
 class AppController(private val context: Context, val scope: CoroutineScope) {
     val main = Dispatchers.Main
     val prefs = Prefs(context)
+    val updater = Updater(context, scope)
     val repository = TopRepository(File(context.filesDir, "tops.json"))
     val repositoryLoaded = repository.load()
     private val savedSlot = SavedTournament(File(context.filesDir, "solo-tournament.json"))
