@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -169,14 +170,14 @@ private fun MenuBattle(app: AppController, modifier: Modifier) {
         }
     }
     val b = battle.first
-    Box(modifier.drawWithCache {
+    Box(modifier.graphicsLayer().drawWithCache { // Couche à part : le stadium n'est dessiné qu'une fois.
         val r = min(size.width, size.height) / 2 * 0.9f
         onDrawBehind {
             drawCircle(Brush.radialGradient(listOf(Color(0x33FF6A3D), Color.Transparent), center, r * 1.3f), r * 1.3f, center)
             paintStadium(b.stadium, center, r)
         }
     }) {
-        Canvas(Modifier.fillMaxSize()) {
+        Canvas(Modifier.fillMaxSize().graphicsLayer()) {
             frame // Redessin à chaque image.
             val geo = b.geometry
             val k = min(size.width, size.height) / 2 * 0.9f / geo.radius.toFloat()

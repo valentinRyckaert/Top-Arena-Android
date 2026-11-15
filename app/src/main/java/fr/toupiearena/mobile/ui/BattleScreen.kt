@@ -204,6 +204,7 @@ fun BattleScreen(
     val effects = remember(session) { BattleEffects() }
     val hud = remember(session) { BattleHud() }
     var frame by remember { mutableLongStateOf(0L) }
+    var hudTick by remember { mutableLongStateOf(0L) }
     var controls by remember { mutableStateOf(scheme) }
     var menu by remember { mutableStateOf(false) }
     var help by remember { mutableStateOf(false) }
@@ -233,6 +234,7 @@ fun BattleScreen(
                     effects.update(dt, impacts, session.state.spinners, session.state.duel, session.state.phase == MatchPhase.Fighting)
                 }
                 frame = now
+                if (now - hudTick >= 50_000_000L) hudTick = now
             }
         }
     }
@@ -245,7 +247,8 @@ fun BattleScreen(
     fun dash() { if (allowed(TouchAction.Dash)) session.requestDash() }
     fun special() { if (allowed(TouchAction.Special)) session.requestSpecial() }
 
-    frame // Recomposition à chaque image.
+    // Interface recomposée 20 fois par seconde ; l'arène et les jauges de timing se redessinent à chaque image.
+    hudTick
     val state = session.state
     val paused = pausable && (menu || help || rules)
     val fighting = state.phase == MatchPhase.Fighting
@@ -301,7 +304,7 @@ fun BattleScreen(
             }
             val textMeasurer = rememberTextMeasurer()
             Canvas(
-                Modifier.fillMaxSize().pointerInput(session) {
+                Modifier.fillMaxSize().graphicsLayer().pointerInput(session) { // Couche à part : seul l'arène est redessinée.
                     // Visée : glisser depuis sa toupie, relâcher pour lancer.
                     awaitEachGesture {
                         val down = awaitFirstDown()
@@ -336,7 +339,7 @@ fun BattleScreen(
         }
 
         ArenaBanners(session, hud, aiming)
-        if (state.duel.active && fighting) DuelHud(session)
+        if (state.duel.active && fighting) DuelHud(session) { frame }
 
         // --- Fiches : sièges pairs à gauche, impairs à droite ------------------------------
         Column(Modifier.align(Alignment.TopStart).padding(start = EdgeMargin, top = 10.dp).width(184.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -614,7 +617,7 @@ private fun spinnerStatus(session: MatchSession, s: Spinner, index: Int): Pair<S
 /** Duel : bandeau, puis jauges (timing) ou corde (rafale) sous l'arène. */
 @NonSkippableComposable
 @Composable
-private fun BoxScope.DuelHud(session: MatchSession) {
+private fun BoxScope.DuelHud(session: MatchSession, frame: () -> Long) {
     val state = session.state
     val duel = state.duel
     val cfg = state.config
@@ -649,8 +652,8 @@ private fun BoxScope.DuelHud(session: MatchSession) {
                 Spacer(Modifier.weight(1f))
                 FieldLabel(tr("série %1", duel.sides[other].streak))
             }
-            Canvas(Modifier.fillMaxWidth().height(10.dp).padding(horizontal = 24.dp)) { timingBar(duel.sides[other]) }
-            Canvas(Modifier.fillMaxWidth().height(36.dp).padding(top = 8.dp)) { timingBar(duel.sides[me]) }
+            Canvas(Modifier.fillMaxWidth().height(10.dp).padding(horizontal = 24.dp).graphicsLayer()) { frame(); timingBar(session.state.duel.sides[other]) }
+            Canvas(Modifier.fillMaxWidth().height(36.dp).padding(top = 8.dp).graphicsLayer()) { frame(); timingBar(session.state.duel.sides[me]) }
             Text(if (mineSide >= 0 && duel.sides[me].done) tr("Série réussie ! En attente de l'adversaire…") else tr("Touchez l'écran quand le curseur est dans le vert"),
                 style = bodyStyle(12.sp), modifier = Modifier.padding(top = 4.dp))
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -771,7 +774,8 @@ private fun FinishedOverlay(session: MatchSession, hud: BattleHud, tutorial: Tut
     }
     val shown = if (winner >= 0) winner else local
     val top = state.spinners[shown].top
-    val spin by rememberInfiniteTransition(label = "spin").animateFloat(0f, 6.2832f, infiniteRepeatable(tween(1400, easing = LinearEasing)), label = "angle")
+    // Rotation par la couche graphique : ni recomposition ni redessin de la toupie à chaque image.
+    val spin = rememberInfiniteTransition(label = "spin").animateFloat(0f, 360f, infiniteRepeatable(tween(1400, easing = LinearEasing)), label = "angle")
 
     Box(Modifier.fillMaxSize().background(Holo.void.copy(alpha = 0.88f))) {
         Row(Modifier.fillMaxSize().padding(horizontal = EdgeMargin, vertical = 18.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -780,7 +784,7 @@ private fun FinishedOverlay(session: MatchSession, hud: BattleHud, tutorial: Tut
                 Box(Modifier.size(200.dp).drawBehind {
                     drawCircle(Brush.radialGradient(listOf(glow.copy(alpha = 0.35f), Color.Transparent), center, size.minDimension / 2), size.minDimension / 2, center)
                     drawCircle(glow.copy(alpha = 0.6f), size.minDimension * 0.44f, center, style = Stroke(2.dp.toPx()))
-                }, contentAlignment = Alignment.Center) { TopView(top, 160.dp, angle = spin) }
+                }, contentAlignment = Alignment.Center) { TopView(top, 160.dp, Modifier.graphicsLayer { rotationZ = spin.value }) }
                 Text(top.displayName().uppercase(), style = displayStyle(14.sp), modifier = Modifier.padding(top = 6.dp))
                 Text(listOf(top.wheel, top.middle, top.tip, top.bolt).joinToString(" · ") { tr(it.name) }, style = bodyStyle(10.5.sp, Holo.muted), maxLines = 1)
             }

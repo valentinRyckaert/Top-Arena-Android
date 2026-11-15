@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -223,7 +224,7 @@ private fun SpinningPreview(top: Top) {
         var last = 0L
         while (true) withFrameNanos { t -> if (last != 0L) angle += top.spin.sign * (t - last) / 1e9f * 2.4f; last = t }
     }
-    Canvas(Modifier.size(250.dp)) {
+    Canvas(Modifier.size(250.dp).graphicsLayer()) { // Couche à part : seul l'aperçu est redessiné.
         val r = size.minDimension / 2
         drawCircle(Holo.violet.copy(alpha = 0.6f), r * 0.98f, style = Stroke(1.dp.toPx(), pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(4f, 18f))))
         drawArc(Holo.type(top.type).copy(alpha = 0.6f), 160f, 110f, false, Offset(center.x - r, center.y - r), androidx.compose.ui.geometry.Size(r * 2, r * 2), style = Stroke(2.5.dp.toPx()))
