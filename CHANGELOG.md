@@ -2,6 +2,23 @@
 
 Versions de l'application mobile (indépendantes de celles du jeu PC).
 
+## 1.1.0
+
+### Nouveautés
+- **Mises à jour intégrées** : le menu affiche la version installée et vérifie la dernière
+  release ; « Mise à jour vX · installer » télécharge l'APK et ouvre l'installateur d'Android, qui
+  remplace l'application sans perdre les toupies. La première fois, Android demande d'autoriser
+  Top Arena à installer des applications. Cette version-ci s'installe encore à la main ; les
+  suivantes se mettront à jour depuis le jeu.
+- **Logo** : Vortyx vue de biais avec sa traînée, sur fond bleu / violet (même logo que sur PC).
+
+### Modifications
+- L'application s'appelle **Top Arena** sous son icône (au lieu de « Toupie Arena »).
+- **Toupies de base renommées**, mêmes pièces : Vortyx (ex-Cyclone Furieux), Bastaron
+  (ex-Forteresse), Celsa (ex-Éternelle), Orvane (ex-Juste Milieu), Celestia (ex-Gardienne), Kyron
+  (ex-Comète), Gorrath (ex-Colosse) et Sylphae (ex-Brise Éternelle). Noms propres : ils ne sont
+  plus traduits et sont identiques sur PC et mobile.
+
 ## 1.0.1
 
 ### Corrections
