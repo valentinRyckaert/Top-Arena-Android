@@ -2,6 +2,19 @@
 
 Versions de l'application mobile (indépendantes de celles du jeu PC).
 
+## 1.0.1
+
+### Corrections
+- Le volet des règles d'un combat défile à nouveau : glisser verticalement sur un curseur fait
+  défiler le volet au lieu de bouger le curseur.
+- La force de lancer affichée va de 50 à 150 %, comme sur PC (elle montrait 0 à 100 %).
+
+### Fluidité
+- Combat : l'interface se recompose 20 fois par seconde au lieu de 60 ; l'arène et les jauges de
+  duel restent mises à jour à chaque image.
+- Le fond holographique, le stadium de l'écran d'accueil, l'aperçu de l'atelier et la toupie de
+  l'écran de résultat ne sont plus redessinés à chaque image.
+
 ## 1.0.0
 
 Première version publiée de Top Arena sur Android, au niveau de la version PC 2.0.0 (mêmes règles,
