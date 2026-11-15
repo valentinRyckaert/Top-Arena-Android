@@ -68,6 +68,10 @@ La page **Aide** récapitule les commandes du schéma choisi.
   express ou classiques (ordre des trois toupies choisi avant chaque match). Un tournoi solo se
   sauvegarde en le quittant (ou si l'application passe en arrière-plan) et se reprend depuis
   Tournois.
+- **Mises à jour intégrées** : le menu affiche la version installée et vérifie la dernière release
+  GitHub ; « Mise à jour vX · installer » télécharge l'APK et ouvre l'installateur d'Android, qui
+  remplace l'application sans perdre les toupies (Android demande la première fois d'autoriser
+  Top Arena à installer des applications).
 - **Tutoriel** : combat guidé par des bulles qui mettent le jeu en pause à chaque action.
 - **Multijoueur en réseau local** (2 à 4 joueurs, PC et mobiles mélangés) : lobbys détectés
   automatiquement (annonces UDP, questions UDP, balayage TCP du Wi-Fi), ou connexion par nom de
