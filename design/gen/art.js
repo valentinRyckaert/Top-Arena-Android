@@ -75,14 +75,14 @@ const MOVES = {
 };
 const BOLTS = { B1: 'onde', B2: 'lance', B3: 'givre', B4: 'vortex', B5: 'distorsion', B6: 'siphon', B7: 'seisme' };
 const PRESETS = [
-  { name: 'Cyclone Furieux', parts: ['RM2', 'PI2', 'P2', 'B2'], type: 'Attaque', lore: 'Trois lames en crochet qui mordent à chaque rotation.' },
-  { name: 'Forteresse', parts: ['RM3', 'PI3', 'P1', 'B1'], type: 'Défense', lore: 'Un mur d’acier à huit bastions. Elle encaisse, puis repousse.' },
-  { name: 'Éternelle', parts: ['RM4', 'PI4', 'P3', 'B6'], type: 'Endurance', lore: 'Une lune noire qui tourne plus longtemps que toutes les autres.' },
-  { name: 'Juste Milieu', parts: ['RM5', 'PI5', 'P4', 'B3'], type: 'Équilibre', lore: 'Un cristal hexagonal, ni trop dur, ni trop fragile.' },
-  { name: 'Gardienne', parts: ['RM1', 'PI1', 'P1', 'B7'], type: 'Défense', lore: 'Six boucliers et un cœur tellurique qui fait trembler l’arène.' },
-  { name: 'Comète', parts: ['RM9', 'PI7', 'P7', 'B5'], type: 'Attaque', lore: 'Deux éperons asymétriques et une queue de distorsion.' },
-  { name: 'Colosse', parts: ['RM10', 'PI8', 'P8', 'B4'], type: 'Défense', lore: 'Quatre butoirs massifs, un abysse en son centre.' },
-  { name: 'Brise Éternelle', parts: ['RM13', 'PI9', 'P9', 'B3'], type: 'Endurance', lore: 'Six ailettes de vent qui glissent sur le givre.' },
+  { name: 'Vortyx', parts: ['RM2', 'PI2', 'P2', 'B2'], type: 'Attaque', lore: 'Trois lames en crochet qui mordent à chaque rotation.' },
+  { name: 'Bastaron', parts: ['RM3', 'PI3', 'P1', 'B1'], type: 'Défense', lore: 'Un mur d’acier à huit bastions. Elle encaisse, puis repousse.' },
+  { name: 'Celsa', parts: ['RM4', 'PI4', 'P3', 'B6'], type: 'Endurance', lore: 'Une lune noire qui tourne plus longtemps que toutes les autres.' },
+  { name: 'Orvane', parts: ['RM5', 'PI5', 'P4', 'B3'], type: 'Équilibre', lore: 'Un cristal hexagonal, ni trop dur, ni trop fragile.' },
+  { name: 'Celestia', parts: ['RM1', 'PI1', 'P1', 'B7'], type: 'Défense', lore: 'Six boucliers et un cœur tellurique qui fait trembler l’arène.' },
+  { name: 'Kyron', parts: ['RM9', 'PI7', 'P7', 'B5'], type: 'Attaque', lore: 'Deux éperons asymétriques et une queue de distorsion.' },
+  { name: 'Gorrath', parts: ['RM10', 'PI8', 'P8', 'B4'], type: 'Défense', lore: 'Quatre butoirs massifs, un abysse en son centre.' },
+  { name: 'Sylphae', parts: ['RM13', 'PI9', 'P9', 'B3'], type: 'Endurance', lore: 'Six ailettes de vent qui glissent sur le givre.' },
 ];
 const sumStats = parts => {
   const [w, m, t] = [WHEELS[parts[0]], MIDDLES[parts[1]], TIPS[parts[2]]];
