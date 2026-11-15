@@ -25,9 +25,9 @@ class I18nTest {
         assertTrue("Textes sans traduction anglaise (à ajouter dans assets/i18n/en.tsv) :\n" + missing.joinToString("\n"), missing.isEmpty())
     }
 
-    /** Données du jeu affichées via tr(variable) : pièces, toupies prédéfinies, stadiums, coups, libellés. */
+    /** Données du jeu affichées via tr(variable) : pièces, stadiums, coups, libellés (les noms de toupies ne se traduisent pas). */
     @Test fun catalogTextsHaveAnEnglishTranslation() {
-        val texts = PartCatalog.all.map { it.name } + PartCatalog.presets.map { it.name } +
+        val texts = PartCatalog.all.map { it.name } +
             Stadium.all.flatMap { listOf(it.name, it.codename) } + SpecialMove.all.map { it.name } +
             TopType.entries.map { it.label } + SpinDirection.entries.map { it.label } + Difficulty.entries.map { it.label } +
             ControlScheme.entries.flatMap { listOf(it.label, it.summary) }

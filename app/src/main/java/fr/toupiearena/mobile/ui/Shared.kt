@@ -50,8 +50,7 @@ import fr.toupiearena.mobile.ui.holo.displayStyle
 import fr.toupiearena.mobile.ui.holo.tr
 import kotlin.math.roundToInt
 
-/** Nom de pièce, toupie prédéfinie, stadium ou coup traduit (le catalogue reste en français). */
-fun Top.displayName() = if (PartCatalog.presets.any { it.name == name }) tr(name) else name
+/** Nom de stadium ou de coup traduit (le catalogue reste en français ; les toupies ne se traduisent pas). */
 fun Stadium.displayName() = tr(name)
 fun specialName(id: String) = SpecialMove.find(id)?.let { tr(it.name) } ?: id
 
@@ -63,7 +62,7 @@ fun TopRow(top: Top?, modifier: Modifier = Modifier, selected: Boolean = false, 
         Row(Modifier.fillMaxSize().padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             TopView(top, height - 10.dp)
             Column(Modifier.weight(1f)) {
-                Text((name ?: top?.displayName() ?: tr("Aléatoire")).uppercase(), style = displayStyle(12.sp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text((name ?: top?.name ?: tr("Aléatoire")).uppercase(), style = displayStyle(12.sp), maxLines = 1, overflow = TextOverflow.Ellipsis)
                 if (top != null && height >= 40.dp) TypeBadge(top.type, Modifier.padding(top = 3.dp))
                 else if (top == null && height >= 48.dp) Text(tr("Toupie tirée au hasard au lancement"), style = bodyStyle(11.5.sp, Holo.muted))
             }

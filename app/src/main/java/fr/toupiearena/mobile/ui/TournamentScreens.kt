@@ -372,7 +372,7 @@ private fun Standings(t: Tournament, local: Int, name: (Int) -> String) {
                         TopView(t.participants[s.participant].tops.firstOrNull(), 26.dp)
                         Column(Modifier.weight(1f)) {
                             Text(name(s.participant).uppercase(), style = displayStyle(10.5.sp, if (me) Holo.green else Holo.text), maxLines = 1)
-                            Text(t.participants[s.participant].tops.firstOrNull()?.displayName().orEmpty(), style = bodyStyle(10.sp, Holo.muted), maxLines = 1)
+                            Text(t.participants[s.participant].tops.firstOrNull()?.name.orEmpty(), style = bodyStyle(10.sp, Holo.muted), maxLines = 1)
                         }
                         val diff = s.points - s.against
                         listOf("${s.played}", "${s.won}", "${s.lost}", "${s.points}").forEach {
@@ -427,7 +427,7 @@ private fun YourMatch(app: AppController, t: Tournament, local: Int, name: (Int)
                     TopView(top, 74.dp)
                     Text(name(p).uppercase(), style = displayStyle(11.sp, if (p == local) Holo.green else Holo.danger), maxLines = 1)
                     val who = t.participants[p]
-                    Text(listOfNotNull(top?.displayName(), if (who.isBot) tr(who.level.label).lowercase() else null).joinToString(" · "),
+                    Text(listOfNotNull(top?.name, if (who.isBot) tr(who.level.label).lowercase() else null).joinToString(" · "),
                         style = bodyStyle(10.sp, Holo.muted), maxLines = 1)
                 }
             }
@@ -457,7 +457,7 @@ private fun TopOrderDrawer(visible: Boolean, tops: List<Top>, onClose: () -> Uni
         Row(Modifier.padding(top = 10.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                 order.forEachIndexed { k, i ->
-                    TopRow(tops[i], selected = k == selected, height = 44.dp, name = "${k + 1}. ${tops[i].displayName()}") { selected = k }
+                    TopRow(tops[i], selected = k == selected, height = 44.dp, name = "${k + 1}. ${tops[i].name}") { selected = k }
                 }
             }
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {

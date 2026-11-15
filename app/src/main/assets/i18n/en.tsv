@@ -102,7 +102,6 @@ Bouton précédent	Back button
 Bouton souris %1	Mouse button %1
 Bouton suivant	Forward button
 Bravo ! Duel gagné et toupie adverse éjectée : vous connaissez toutes les actions. Appuyez sur Échap pour revenir au menu.	Well done! Duel won and the opposing top knocked out: you know every move now. Press Esc to return to the menu.
-Brise Éternelle	Eternal Breeze
 Bunker-8	Bunker-8
 Béton	Concrete
 C'est le duel par défaut des combats, des parties en réseau et des tournois ; la personnalisation des règles permet d'en choisir un autre.	This is the default duel for battles, LAN games and tournaments; the rules customisation lets you pick another one.
@@ -122,13 +121,11 @@ Clic droit	Right click
 Clic gauche	Left click
 Clic molette	Middle click
 Cliquez sur une case puis appuyez sur une touche ou un bouton de la souris. Échap annule, Retour arrière efface la case. La souris vise toujours pendant la visée, et Échap reste la touche pour quitter.	Click a box, then press a key or mouse button. Esc cancels, Backspace clears the box. The mouse always aims while aiming, and Esc remains the key to quit.
-Colosse	Colossus
 Combat	Battle
 Combat terminé	Battle over
 Combattre !	Fight!
 Commandes et repères	Controls and tips
 Commandes…	Controls…
-Comète	Comet
 Connecté à l'hôte %1.	Connected to host %1.
 Connexion avec l'hôte perdue.	Lost connection to the host.
 Connexion impossible : %1	Could not connect: %1
@@ -153,7 +150,6 @@ Créer un tournoi (lobby des joueurs humains)	Create a tournament (lobby for hum
 Créer un tournoi…	Create a tournament…
 Ctrl	Ctrl
 Cuvette circulaire en plastique avec rebord. Le stadium de référence, sans avantage pour aucun type.	Round plastic bowl with a rim. The reference stadium, with no advantage for any type.
-Cyclone Furieux	Furious Cyclone
 D	L
 DASH !	DASH!
 DUEL !	DUEL!
@@ -225,9 +221,7 @@ Force %1 %	Power %1%
 Force avec laquelle les toupies sont repoussées.	How hard tops get pushed back.
 Force de la correction de trajectoire aux flèches. 0 = désactivé.	Strength of arrow-key course correction. 0 = off.
 Format	Format
-Forteresse	Fortress
 Fosse Sauvage	Wild Pit
-Gardienne	Guardian
 Gauche (pilotage, direction)	Left (steering, direction)
 Gelée (%1 s)	Frozen (%1s)
 Glace	Ice
@@ -258,7 +252,6 @@ Joueur	Player
 Joueur %1	Player %1
 Joueurs	Players
 Journée %1/%2	Matchday %1/%2
-Juste Milieu	Golden Mean
 L'adversaire est proche : appuyez sur %1 pour dasher. Le dash fonce sur lui avec plus d'attaque, contre un peu d'endurance.	The opponent is close: press %1 to dash. A dash charges at them with extra attack, for a bit of stamina.
 L'hôte a fermé le lobby.	The host closed the lobby.
 L'hôte ne répond pas.	The host is not responding.
@@ -554,7 +547,6 @@ vous	you
 Élimination directe	Knockout
 Équilibre	Balance
 Établi	Workbench
-Éternelle	Eternal
 —	—
 ‹ › ou molette : pièce précédente / suivante · clic : toutes les pièces	‹ › or mouse wheel: previous / next part · click: every part
 ▲ Monter	▲ Move up

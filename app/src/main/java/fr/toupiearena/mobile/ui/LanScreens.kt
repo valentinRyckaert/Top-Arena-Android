@@ -254,8 +254,8 @@ fun LobbyScreen(app: AppController) {
             }
             Row(Modifier.fillMaxWidth().padding(horizontal = EdgeMargin, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                HoloButton(if (needed > 1) tr("Vos toupies : %1", picks.take(needed).joinToString(", ") { it.displayName() })
-                    else tr("Votre toupie : %1", picks[0].displayName()), { if (needed > 1) showTops = true else picking = 0 },
+                HoloButton(if (needed > 1) tr("Vos toupies : %1", picks.take(needed).joinToString(", ") { it.name })
+                    else tr("Votre toupie : %1", picks[0].name), { if (needed > 1) showTops = true else picking = 0 },
                     Modifier.width(300.dp), icon = HoloIcon.Build, height = 40.dp, textSize = 11f)
                 val count = info.players.size
                 val ready = info.players.count { it.host || it.ready }
@@ -286,7 +286,7 @@ fun LobbyScreen(app: AppController) {
         RulesDrawer(showRules, info.rules, { server?.setRules(it) }, { showRules = false }, readOnly = !hosting)
         SideDrawer(showTops, DrawerSide.Start, tr("Vos toupies"), { showTops = false }, width = 430.dp, sub = tr("ordre choisi avant chaque match")) {
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                repeat(needed) { k -> TopRow(picks[k], name = tr("Toupie %1 · %2", k + 1, picks[k].displayName()), chevron = true) { picking = k } }
+                repeat(needed) { k -> TopRow(picks[k], name = tr("Toupie %1 · %2", k + 1, picks[k].name), chevron = true) { picking = k } }
             }
         }
         val k = picking
@@ -325,7 +325,7 @@ private fun PlayerSlot(p: LobbyPlayer?, slot: Int, myId: Int, modifier: Modifier
                 Text(p.name.uppercase(), style = displayStyle(14.sp), maxLines = 1)
                 Text(listOfNotNull(if (mine) tr("vous") else null, if (p.host) tr("hôte") else null).joinToString(" · "), style = bodyStyle(10.5.sp, Holo.muted))
                 if (top != null) Row(Modifier.padding(top = 4.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(p.tops.joinToString(", ") { it.displayName() }.uppercase(), style = displayStyle(10.sp), maxLines = 1, modifier = Modifier.weight(1f, fill = false))
+                    Text(p.tops.joinToString(", ") { it.name }.uppercase(), style = displayStyle(10.sp), maxLines = 1, modifier = Modifier.weight(1f, fill = false))
                     TypeBadge(top.type)
                 }
             }

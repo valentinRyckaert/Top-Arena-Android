@@ -69,7 +69,7 @@ fun SoloSetupScreen(app: AppController) {
                     Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
                         TopView(player, 128.dp)
                         Column(Modifier.padding(start = 12.dp).weight(1f)) {
-                            Text(player.displayName().uppercase(), style = displayStyle(15.sp), maxLines = 1)
+                            Text(player.name.uppercase(), style = displayStyle(15.sp), maxLines = 1)
                             Row(Modifier.padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 TypeBadge(player.type)
                                 Text("${specialName(player.special)} · ${tr(player.spin.label).lowercase()}", style = bodyStyle(12.sp, Holo.muted), maxLines = 1)
@@ -88,7 +88,7 @@ fun SoloSetupScreen(app: AppController) {
                     Column(Modifier.weight(1f).padding(vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically)) {
                         repeat(botCount) { i ->
                             TopRow(bots[i], height = if (botCount > 1) 40.dp else 56.dp, chevron = true,
-                                name = tr("Bot %1 · %2", i + 1, bots[i]?.displayName() ?: tr("Aléatoire"))) { picking = i }
+                                name = tr("Bot %1 · %2", i + 1, bots[i]?.name ?: tr("Aléatoire"))) { picking = i }
                         }
                     }
                     Segmented(Difficulty.entries.map { tr(it.label) }, difficulty.ordinal, { difficulty = Difficulty.entries[it] },

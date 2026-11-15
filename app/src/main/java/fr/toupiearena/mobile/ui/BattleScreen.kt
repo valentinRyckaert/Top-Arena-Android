@@ -583,7 +583,7 @@ private fun HudCard(session: MatchSession, index: Int) {
                 TopView(s.top, 24.dp, angle = s.angle.toFloat())
                 Column(Modifier.weight(1f).padding(start = 6.dp)) {
                     Text(seatName(session, index).uppercase(), style = displayStyle(10.sp, color, 0.08f), maxLines = 1)
-                    Text(s.top.displayName(), style = bodyStyle(10.sp, Holo.muted), maxLines = 1)
+                    Text(s.top.name, style = bodyStyle(10.sp, Holo.muted), maxLines = 1)
                 }
                 Text("${s.spin.roundToInt()}", style = displayStyle(16.sp, Holo.text, 0f))
             }
@@ -785,7 +785,7 @@ private fun FinishedOverlay(session: MatchSession, hud: BattleHud, tutorial: Tut
                     drawCircle(Brush.radialGradient(listOf(glow.copy(alpha = 0.35f), Color.Transparent), center, size.minDimension / 2), size.minDimension / 2, center)
                     drawCircle(glow.copy(alpha = 0.6f), size.minDimension * 0.44f, center, style = Stroke(2.dp.toPx()))
                 }, contentAlignment = Alignment.Center) { TopView(top, 160.dp, Modifier.graphicsLayer { rotationZ = spin.value }) }
-                Text(top.displayName().uppercase(), style = displayStyle(14.sp), modifier = Modifier.padding(top = 6.dp))
+                Text(top.name.uppercase(), style = displayStyle(14.sp), modifier = Modifier.padding(top = 6.dp))
                 Text(listOf(top.wheel, top.middle, top.tip, top.bolt).joinToString(" · ") { tr(it.name) }, style = bodyStyle(10.5.sp, Holo.muted), maxLines = 1)
             }
             Column(Modifier.weight(0.62f).fillMaxHeight().padding(start = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -802,7 +802,7 @@ private fun FinishedOverlay(session: MatchSession, hud: BattleHud, tutorial: Tut
                                     Text("${k + 1}", style = displayStyle(12.sp, Holo.warn))
                                     TopView(state.spinners[i].top, 20.dp)
                                     Text(seatName(session, i).uppercase(), style = displayStyle(10.sp, seatColor(session, i)), modifier = Modifier.weight(1f))
-                                    Text(state.spinners[i].top.displayName(), style = bodyStyle(10.sp, Holo.muted))
+                                    Text(state.spinners[i].top.name, style = bodyStyle(10.sp, Holo.muted))
                                 }
                             }
                         }

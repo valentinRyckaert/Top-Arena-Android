@@ -73,14 +73,14 @@ object PartCatalog {
 
     val presets: List<Top> by lazy {
         listOf(
-            arrayOf("Cyclone Furieux", "RM2", "PI2", "P2", "B2"),
-            arrayOf("Forteresse", "RM3", "PI3", "P1", "B1"),
-            arrayOf("Éternelle", "RM4", "PI4", "P3", "B6"),
-            arrayOf("Juste Milieu", "RM5", "PI5", "P4", "B3"),
-            arrayOf("Gardienne", "RM1", "PI1", "P1", "B7"),
-            arrayOf("Comète", "RM9", "PI7", "P7", "B5"),
-            arrayOf("Colosse", "RM10", "PI8", "P8", "B4"),
-            arrayOf("Brise Éternelle", "RM13", "PI9", "P9", "B3"),
+            arrayOf("Vortyx", "RM2", "PI2", "P2", "B2"),
+            arrayOf("Bastaron", "RM3", "PI3", "P1", "B1"),
+            arrayOf("Celsa", "RM4", "PI4", "P3", "B6"),
+            arrayOf("Orvane", "RM5", "PI5", "P4", "B3"),
+            arrayOf("Celestia", "RM1", "PI1", "P1", "B7"),
+            arrayOf("Kyron", "RM9", "PI7", "P7", "B5"),
+            arrayOf("Gorrath", "RM10", "PI8", "P8", "B4"),
+            arrayOf("Sylphae", "RM13", "PI9", "P9", "B3"),
         ).map { r -> Top(r[0], find(r[1])!!, find(r[2])!!, find(r[3])!!, find(r[4])!!) }
     }
 
