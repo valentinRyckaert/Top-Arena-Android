@@ -4,7 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -52,7 +53,11 @@ val EdgeMargin = 24.dp
 /** Écran plein, fond holographique. */
 @Composable
 fun HoloScreen(modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Unit) =
-    Box(modifier.fillMaxSize().drawBehind { holoBackground() }, content = content)
+    Box(modifier.fillMaxSize()) {
+        // Couche à part : le fond (dégradés, lignes de balayage) n'est pas redessiné avec les éléments animés.
+        Spacer(Modifier.matchParentSize().graphicsLayer().drawBehind { holoBackground() })
+        content()
+    }
 
 /** « /// » décoratif. */
 @Composable
@@ -222,7 +227,7 @@ fun HoloSlider(value: Float, onChange: (Float) -> Unit, label: String, valueText
             detectTapGestures { set(it.x) }
         }.pointerInput(enabled) {
             if (!enabled) return@pointerInput
-            detectDragGestures { change, _ -> onChange((change.position.x / size.width).coerceIn(0f, 1f)) }
+            detectHorizontalDragGestures { change, _ -> onChange((change.position.x / size.width).coerceIn(0f, 1f)) } // Le vertical fait défiler.
         }) {
             val y = size.height / 2; val th = 6.dp.toPx(); val kx = size.width * value
             drawPath(skewPath(0f, y - th / 2, size.width, th, 3.dp.toPx()), Holo.field)
