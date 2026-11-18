@@ -139,3 +139,11 @@ design/     planches SVG du design mobile et leurs générateurs
 Le moteur et le réseau sont en Kotlin pur (testés sur la JVM) ; toute la logique tourne sur le
 fil principal, les sockets lisent et écrivent dans des coroutines d'entrée/sortie. Les valeurs de
 jeu sont celles de la version PC 2.0.0.
+
+## Licence
+
+Le code de Top Arena Mobile est distribué sous licence [MIT](LICENSE). L'APK contient aussi des
+bibliothèques Kotlin, kotlinx.coroutines et AndroidX (Apache 2.0) et les polices Chakra Petch et
+Rajdhani (SIL OFL 1.1) : voir [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md). Les textes
+complets sont dans `app/src/main/assets/licences/` et dans le jeu (Aide > Licences) ; `LicenceTest`
+vérifie que les copies embarquées restent identiques à `LICENSE` et `THIRD-PARTY-NOTICES.md`.

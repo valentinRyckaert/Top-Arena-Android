@@ -1,5 +1,8 @@
 package fr.toupiearena.mobile.ui
 
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalContext
+import android.content.Context
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -213,8 +216,17 @@ fun HelpScreen(app: AppController) {
                 HoloButton(tr("Paramètres"), { app.screen = Screen.Settings }, height = 36.dp, icon = HoloIcon.Gear, textSize = 12f)
             }
             Row(Modifier.fillMaxSize().padding(horizontal = EdgeMargin), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                Rail(listOf(tr("Commandes") to HoloIcon.Hand, tr("Règles") to HoloIcon.Balance, tr("Coups") to HoloIcon.Bolt), tab) {
+                Rail(listOf(tr("Commandes") to HoloIcon.Hand, tr("Règles") to HoloIcon.Balance, tr("Coups") to HoloIcon.Bolt,
+                    tr("Licences") to HoloIcon.Lock), tab) {
                     if (it == 2) app.screen = Screen.Moves(Screen.Help) else tab = it
+                }
+                if (tab == 3) {
+                    Panel(Modifier.weight(1f).padding(vertical = 12.dp), title = tr("Licences"), index = "v${app.updater.current}") {
+                        val context = LocalContext.current
+                        val text = remember { licencesText(context) }
+                        Text(text, style = bodyStyle(11.5.sp, Holo.muted, FontWeight.Medium), modifier = Modifier.verticalScroll(rememberScrollState()))
+                    }
+                    return@Row
                 }
                 val rows = if (tab == 0) controlRows(scheme) else ruleRows()
                 Panel(Modifier.weight(1f).padding(vertical = 12.dp), title = if (tab == 0) tr("Commandes · %1", tr(scheme.label).lowercase()) else tr("Règles du combat")) {
@@ -231,6 +243,12 @@ fun HelpScreen(app: AppController) {
         }
     }
 }
+
+/** Licence du jeu, composants tiers et textes complets de leurs licences (assets/licences). */
+fun licencesText(context: Context): String =
+    listOf("LICENSE.txt", "THIRD-PARTY-NOTICES.md", "Apache-2.0.txt", "OFL-ChakraPetch.txt", "OFL-Rajdhani.txt").joinToString("\n\n") { name ->
+        "==== $name ====\n\n" + context.assets.open("licences/$name").bufferedReader().use { it.readText() }
+    }
 
 fun controlRows(scheme: ControlScheme): List<Pair<String, String>> {
     val steer = when (scheme) {
